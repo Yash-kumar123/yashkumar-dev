@@ -154,19 +154,6 @@ The production assets will be output to the `dist/` directory.
 
 ---
 
-## 🚀 Deployment
-
-This project is configured for seamless deployment on **Vercel** or **Render**:
-
-1. Push your repository to GitHub.
-2. Log into [Vercel](https://vercel.com) and click **"Add New Project"**.
-3. Import `yashkumar-dev`.
-4. Framework Preset: **Vite**.
-5. Build Command: `npm run build` | Output Directory: `dist`.
-6. Click **Deploy**.
-
----
-
 ## 🤝 Connect & Hire Yash
 
 - **Email**: [yash123450.yk@gmail.com](mailto:yash123450.yk@gmail.com)
