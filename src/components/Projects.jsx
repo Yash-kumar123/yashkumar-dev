@@ -1,148 +1,147 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ExternalLink, Github, ChevronDown } from 'lucide-react'
+import { ExternalLink, Github, ChevronDown, ArrowUpRight } from 'lucide-react'
 import { projects } from '../data/portfolioData'
 
-const accentClasses = {
-  amber: {
-    text: 'text-amber',
-    border: 'border-amber/30',
-    bg: 'bg-amber/10',
-    glow: 'hover:border-amber/60 hover:shadow-[0_10px_35px_-5px_rgba(245,165,36,0.18)]',
-  },
-  violet: {
-    text: 'text-violet',
-    border: 'border-violet/30',
-    bg: 'bg-violet/10',
-    glow: 'hover:border-violet/60 hover:shadow-[0_10px_35px_-5px_rgba(139,124,246,0.18)]',
-  },
-  teal: {
-    text: 'text-teal',
-    border: 'border-teal/30',
-    bg: 'bg-teal/10',
-    glow: 'hover:border-teal/60 hover:shadow-[0_10px_35px_-5px_rgba(45,212,191,0.18)]',
-  },
-  rose: {
-    text: 'text-rose',
-    border: 'border-rose/30',
-    bg: 'bg-rose/10',
-    glow: 'hover:border-rose/60 hover:shadow-[0_10px_35px_-5px_rgba(251,113,133,0.18)]',
-  },
-}
-
-function ProjectCard({ project, index }) {
-  const [hovered, setHovered] = useState(false)
-  const [pinned, setPinned] = useState(false)
-  const isOpen = pinned || hovered
-
-  const c = accentClasses[project.accent]
+function ProjectRow({ project, index }) {
+  const [expanded, setExpanded] = useState(false)
+  const formattedIndex = String(index + 1).padStart(2, '0')
 
   return (
     <motion.div
-      layout
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -6, scale: 1.01 }}
-      viewport={{ once: true, margin: '-60px' }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      transition={{ duration: 0.35, ease: 'easeOut', delay: index * 0.05 }}
-      className={`group relative rounded-2xl border ${c.border} bg-card overflow-hidden transition-all duration-300 ${c.glow}`}
+      viewport={{ once: true, margin: '-80px' }}
+      transition={{ duration: 0.5, delay: index * 0.08 }}
+      className="group relative glass-card p-8 md:p-10 transition-all duration-500 hover:border-ember/40 hover:shadow-[0_0_40px_rgba(252,107,47,0.15)]"
     >
-      {/* Subtle Accent Glow Overlay */}
-      <div className={`absolute top-0 left-0 right-0 h-1 ${c.bg} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
+      {/* Subtle Ember Radial Glow on Hover */}
+      <div
+        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-3xl"
+        style={{
+          background: 'radial-gradient(circle at center, rgba(252,107,47,0.08) 0%, transparent 70%)',
+        }}
+      />
 
-      <div className="p-6">
-        <div className="flex items-start justify-between gap-4">
-          <div className="min-w-0">
-            <div className="flex items-center gap-2 mb-1">
-              <span className={`text-xs font-mono ${c.text}`}>{project.date}</span>
+      <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        {/* Left Info: Number & Title & Description */}
+        <div className="flex items-start gap-6 max-w-3xl">
+          <span className="font-mono text-2xl text-ember font-bold shrink-0 mt-1">
+            {formattedIndex}
+          </span>
+
+          <div>
+            <div className="flex flex-wrap items-center gap-3 mb-2">
+              <h3 className="font-poppins font-extrabold text-2xl sm:text-3xl text-white group-hover:text-ember transition-colors duration-300 tracking-tight">
+                {project.name}
+              </h3>
+              <span className="text-xs font-mono text-[#B5B5B5] px-3 py-1 rounded-full border border-white/10 bg-white/5">
+                {project.date}
+              </span>
             </div>
-            <h3 className={`font-display font-bold text-xl text-text transition-colors duration-200 group-hover:${c.text}`}>
-              {project.name}
-            </h3>
-            <p className="text-muted text-sm mt-0.5">{project.subtitle}</p>
+
+            <p className="text-xs font-mono text-ember/90 mb-3 uppercase tracking-wider">{project.subtitle}</p>
+
+            <p className="text-[#B5B5B5] text-sm sm:text-base leading-relaxed font-poppins max-w-2xl font-normal">
+              {project.description}
+            </p>
+
+            {/* Tech Stack Tags */}
+            <div className="flex flex-wrap gap-2 mt-5">
+              {project.stack.map((tech) => (
+                <span
+                  key={tech}
+                  className="text-xs font-mono px-3 py-1 rounded-full border border-white/10 bg-white/5 text-[#B5B5B5] group-hover:border-ember/30 group-hover:text-white transition-colors"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
           </div>
+        </div>
+
+        {/* Right Actions & Expand Toggle */}
+        <div className="flex flex-wrap items-center gap-4 shrink-0 lg:flex-col lg:items-end">
+          <div className="flex items-center gap-3">
+            {project.liveUrl && (
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-ember text-white text-xs font-mono font-medium tracking-wide hover:bg-ember-bright transition-all duration-300 shadow-[0_0_20px_rgba(252,107,47,0.35)]"
+              >
+                <span>LIVE DEMO</span>
+                <ArrowUpRight size={14} />
+              </a>
+            )}
+            {project.repoUrl && (
+              <a
+                href={project.repoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full border border-white/15 bg-white/5 text-[#B5B5B5] hover:text-white hover:border-white/30 text-xs font-mono transition-all duration-300"
+              >
+                <Github size={14} />
+                <span>CODE</span>
+              </a>
+            )}
+          </div>
+
           <button
-            onClick={() => setPinned((v) => !v)}
-            className="shrink-0 text-muted hover:text-text transition-colors p-1"
-            aria-label="Toggle details"
+            onClick={() => setExpanded((v) => !v)}
+            className="inline-flex items-center gap-1.5 text-xs font-mono text-[#B5B5B5] hover:text-ember transition-colors py-1"
           >
-            <ChevronDown size={20} className={`transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+            <span>{expanded ? 'HIDE HIGHLIGHTS' : 'VIEW HIGHLIGHTS'}</span>
+            <ChevronDown size={14} className={`transition-transform duration-300 ${expanded ? 'rotate-180' : ''}`} />
           </button>
         </div>
-
-        <p className="text-text/90 text-sm leading-relaxed mt-4">{project.description}</p>
-
-        <AnimatePresence>
-          {isOpen && (
-            <motion.ul
-              initial={{ opacity: 0, height: 0, marginTop: 0 }}
-              animate={{ opacity: 1, height: 'auto', marginTop: 16 }}
-              exit={{ opacity: 0, height: 0, marginTop: 0 }}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
-              className="space-y-2 overflow-hidden"
-            >
-              {project.bullets.map((b, i) => (
-                <li key={i} className="flex gap-2 text-sm text-text/80 leading-relaxed">
-                  <span className={`${c.text} shrink-0 transition-transform group-hover:translate-x-0.5`}>▸</span>
-                  <span>{b}</span>
-                </li>
-              ))}
-            </motion.ul>
-          )}
-        </AnimatePresence>
-
-        <div className="flex flex-wrap gap-2 mt-5">
-          {project.stack.map((s) => (
-            <span
-              key={s}
-              className={`text-[11px] font-mono px-2.5 py-1 rounded-full ${c.bg} ${c.text} border ${c.border} transition-transform duration-200 hover:scale-105`}
-            >
-              {s}
-            </span>
-          ))}
-        </div>
-
-        <div className="flex flex-wrap gap-4 mt-5">
-          {project.liveUrl && (
-            <a
-              href={project.liveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`inline-flex items-center gap-1.5 text-sm font-medium ${c.text} hover:underline transition-transform hover:translate-x-0.5`}
-            >
-              Live demo <ExternalLink size={14} />
-            </a>
-          )}
-          {project.repoUrl && (
-            <a
-              href={project.repoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-muted hover:text-text transition-transform hover:translate-x-0.5"
-            >
-              View code <Github size={14} />
-            </a>
-          )}
-        </div>
       </div>
+
+      {/* Expandable Bullet Points */}
+      <AnimatePresence>
+        {expanded && (
+          <motion.div
+            initial={{ opacity: 0, height: 0, marginTop: 0 }}
+            animate={{ opacity: 1, height: 'auto', marginTop: 24 }}
+            exit={{ opacity: 0, height: 0, marginTop: 0 }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            className="overflow-hidden lg:pl-12 relative z-10"
+          >
+            <div className="p-6 rounded-2xl border border-white/10 bg-black/40 space-y-3">
+              <span className="font-mono text-xs text-ember tracking-widest uppercase block mb-1">KEY TECHNICAL HIGHLIGHTS</span>
+              {project.bullets.map((bullet, i) => (
+                <div key={i} className="flex items-start gap-3 text-sm text-[#B5B5B5] leading-relaxed font-poppins">
+                  <span className="text-ember font-mono text-xs mt-0.5">▸</span>
+                  <span>{bullet}</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   )
 }
 
 export default function Projects() {
   return (
-    <section id="projects" className="py-24 px-6 md:px-10 border-t border-line">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-12">
-          <span className="text-amber font-mono text-xs tracking-widest uppercase">Projects</span>
-          <h2 className="font-display font-bold text-3xl md:text-4xl text-text mt-2">Things I've built</h2>
+    <section id="projects" className="relative py-32 md:py-48 bg-void border-t border-white/5 font-poppins">
+      <div className="max-w-6xl mx-auto px-6 md:px-12">
+        {/* Section Header */}
+        <div className="mb-16 md:mb-20">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="w-8 h-[2px] bg-ember inline-block rounded-full" />
+            <span className="text-ember text-xs font-bold tracking-[0.25em] uppercase">Featured Software</span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-[1.1] tracking-tight">
+            Projects
+          </h2>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
-          {projects.map((p, i) => (
-            <ProjectCard key={p.id} project={p} index={i} />
+        {/* Project Cards List */}
+        <div className="space-y-6">
+          {projects.map((project, index) => (
+            <ProjectRow key={project.id} project={project} index={index} />
           ))}
         </div>
       </div>

@@ -3,11 +3,10 @@ import { Menu, X, Download } from 'lucide-react'
 import { profile } from '../data/portfolioData'
 
 const LINKS = [
-  { id: 'home', label: 'Home' },
-  { id: 'about', label: 'About' },
-  { id: 'skills', label: 'Skills' },
-  { id: 'projects', label: 'Projects' },
-  { id: 'achievements', label: 'Achievements' },
+  { id: 'hero', label: 'Home' },
+  { id: 'philosophy', label: 'Philosophy' },
+  { id: 'projects', label: 'Work' },
+  { id: 'journey', label: 'Journey' },
   { id: 'contact', label: 'Contact' },
 ]
 
@@ -16,7 +15,7 @@ export default function Navbar({ active, onNavigate }) {
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20)
+    const onScroll = () => setScrolled(window.scrollY > 30)
     window.addEventListener('scroll', onScroll)
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
@@ -28,58 +27,80 @@ export default function Navbar({ active, onNavigate }) {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${
-        scrolled ? 'bg-bg/90 backdrop-blur-md border-b border-line' : 'bg-transparent'
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        scrolled
+          ? 'bg-void/85 backdrop-blur-xl border-b border-white/10 py-3.5 shadow-2xl'
+          : 'bg-transparent py-6'
       }`}
     >
-      <div className="max-w-6xl mx-auto px-6 md:px-10 h-16 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between font-poppins">
+        {/* Brand Emblem Logo */}
         <button
-          onClick={() => handleClick('home')}
-          className="font-display font-bold text-lg text-text flex items-center gap-2"
+          onClick={() => handleClick('hero')}
+          className="group flex items-center gap-3 text-left focus:outline-none"
         >
-          <span className="w-8 h-8 rounded-lg bg-amber/15 border border-amber/30 flex items-center justify-center text-amber text-sm">
+          <span className="w-9 h-9 rounded-full bg-white/5 border border-white/15 flex items-center justify-center font-display font-bold text-xs text-ember group-hover:border-ember/50 group-hover:shadow-[0_0_15px_rgba(252,107,47,0.4)] transition-all">
             YK
           </span>
-          <span className="hidden sm:inline">Yash Kumar</span>
+          <span className="font-display font-bold text-sm tracking-tight text-white group-hover:text-ember transition-colors hidden sm:inline">
+            Yash Kumar
+          </span>
         </button>
 
-        <nav className="hidden md:flex items-center gap-1">
-          {LINKS.map((l) => (
-            <button
-              key={l.id}
-              onClick={() => handleClick(l.id)}
-              className={`px-4 py-2 text-sm rounded-full transition-colors ${
-                active === l.id ? 'text-amber bg-amber/10' : 'text-muted hover:text-text'
-              }`}
-            >
-              {l.label}
-            </button>
-          ))}
+        {/* Desktop Nav Items */}
+        <nav className="hidden md:flex items-center gap-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-md px-4 py-1.5 shadow-2xl">
+          {LINKS.map((l) => {
+            const isActive = active === l.id
+            return (
+              <button
+                key={l.id}
+                onClick={() => handleClick(l.id)}
+                className={`relative px-4 py-1.5 text-xs font-mono tracking-wider transition-colors duration-300 ${
+                  isActive ? 'text-ember font-semibold' : 'text-[#B5B5B5] hover:text-white'
+                }`}
+              >
+                {isActive && (
+                  <span className="absolute inset-0 bg-ember/15 rounded-full border border-ember/40 -z-10" />
+                )}
+                {l.label}
+              </button>
+            )
+          })}
         </nav>
 
+        {/* Resume Button */}
         <div className="hidden md:block">
           <a
             href={profile.resumeUrl}
             download
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber text-bg text-sm font-semibold hover:bg-amber/90 transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-ember/50 bg-ember/15 text-white text-xs font-mono tracking-wider hover:bg-ember transition-all duration-300 shadow-[0_0_20px_rgba(252,107,47,0.25)]"
           >
-            <Download size={15} /> Resume
+            <Download size={13} />
+            <span>RESUME</span>
           </a>
         </div>
 
-        <button className="md:hidden text-text" onClick={() => setOpen((v) => !v)}>
-          {open ? <X size={22} /> : <Menu size={22} />}
+        {/* Mobile Toggle */}
+        <button
+          className="md:hidden text-white p-2 rounded-xl bg-white/5 border border-white/10"
+          onClick={() => setOpen((v) => !v)}
+          aria-label="Toggle menu"
+        >
+          {open ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
 
+      {/* Mobile Drawer */}
       {open && (
-        <div className="md:hidden bg-bg border-b border-line px-6 py-4 flex flex-col gap-1">
+        <div className="md:hidden bg-void/95 backdrop-blur-2xl border-b border-white/10 px-6 py-6 flex flex-col gap-3 font-poppins">
           {LINKS.map((l) => (
             <button
               key={l.id}
               onClick={() => handleClick(l.id)}
-              className={`text-left px-3 py-2.5 rounded-lg text-sm ${
-                active === l.id ? 'text-amber bg-amber/10' : 'text-muted'
+              className={`text-left px-4 py-3 rounded-xl text-sm font-mono tracking-wider transition-all ${
+                active === l.id
+                  ? 'text-ember bg-ember/10 border border-ember/30'
+                  : 'text-[#B5B5B5] hover:text-white bg-white/5 border border-transparent'
               }`}
             >
               {l.label}
@@ -88,9 +109,9 @@ export default function Navbar({ active, onNavigate }) {
           <a
             href={profile.resumeUrl}
             download
-            className="mt-2 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-amber text-bg text-sm font-semibold"
+            className="mt-2 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-ember text-white font-mono font-semibold text-xs tracking-wider shadow-[0_0_20px_rgba(252,107,47,0.3)]"
           >
-            <Download size={15} /> Download Resume
+            <Download size={15} /> DOWNLOAD RESUME
           </a>
         </div>
       )}

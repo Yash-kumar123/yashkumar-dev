@@ -2,39 +2,97 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --void: #000000;
+  --ember: #00f0ff;
+  --ash: #a1a1aa;
+  --cloud: #ffffff;
+}
+
 html {
   scroll-behavior: smooth;
+  background-color: #000000;
+  color: #ffffff;
 }
 
 body {
-  background-color: #0b1220;
-  color: #e7ecf5;
-  font-family: 'Inter', sans-serif;
+  background-color: #000000;
+  color: #ffffff;
+  font-family: 'Poppins', 'Inter', sans-serif;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: #00f0ff;
+  color: #000000;
 }
 
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #0b1220;
+  background: #000000;
 }
 ::-webkit-scrollbar-thumb {
-  background: #233047;
-  border-radius: 6px;
+  background: #27272a;
+  border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #2c3b57;
+  background: #3f3f46;
 }
 
-.gradient-text {
-  background: linear-gradient(90deg, #f5a524, #fb7185);
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.025);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1.5rem;
+}
+.glass-card:hover {
+  border-color: rgba(0, 240, 255, 0.4);
+  box-shadow: 0 0 35px rgba(0, 240, 255, 0.15);
+}
+
+.gradient-text-ember {
+  background: linear-gradient(135deg, #ffffff 40%, #00f0ff 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
-.glow-ring {
-  box-shadow: 0 0 0 1px rgba(245, 165, 36, 0.25), 0 0 60px -10px rgba(245, 165, 36, 0.35);
+.glow-ember {
+  box-shadow: 0 0 35px rgba(0, 240, 255, 0.4);
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+    opacity: 0.2;
+  }
+  50% {
+    transform: translateY(-18px) scale(1.1);
+    opacity: 0.7;
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes reveal-up {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
 }
 
 @media (prefers-reduced-motion: reduce) {

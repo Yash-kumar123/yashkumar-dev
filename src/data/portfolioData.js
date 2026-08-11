@@ -1,3 +1,5 @@
+import { profilePhotoDataUri } from './profilePhoto'
+
 export const profile = {
   name: 'Yash Kumar',
   role: 'Full-Stack Developer',
@@ -10,8 +12,8 @@ export const profile = {
   linkedin: 'linkedin.com/in/yash-kumar123',
   github: 'github.com/Yash-kumar123',
   badge: 'SIH 2025 National Finalist',
-  photo: '/profile.jpg',
-  resumeUrl: '/resume.pdf',
+  photo: profilePhotoDataUri,
+  resumeUrl: '/Resume.pdf',
 }
 
 export const about = `I'm a final-year Computer Science student who'd rather ship something people can actually use than finish another tutorial. Over the last two years I've built a real-time collaborative AI code editor, a backend that analyzes speech to help flag early signs of dementia, and a multi-tenant employee review platform — each one taught me something the classroom didn't. In 2025 my team made the national finals of Smart India Hackathon, out of 500+ teams that entered. I work mostly in React, Node.js, and FastAPI, and I'm increasingly pulled toward the AI side of things — multi-agent systems, RAG, and getting LLMs to do something genuinely useful instead of just answering questions. Right now I'm looking for a full-time or internship role where I can keep building things that ship.`
@@ -162,6 +164,19 @@ export const achievements = [
     title: 'Hacknoccino 4.0',
     detail: 'Designed and built a hardware project prototype under a fast-paced hackathon clock.',
     color: 'violet',
+  },
+]
+
+export const certificates = [
+  {
+    id: 'quizoff-2026',
+    title: "QuizOff 2026: India's Biggest AI Quiz",
+    issuer: 'CampusCrew (Hosted on Unstop)',
+    date: '19-JULY-2026',
+    founder: 'Aaradhya Gupta (Founder, CampusCrew)',
+    stats: '5,25,000+ Students · 48,500+ Institutions · 35+ Countries',
+    description: 'Selected among the top competing minds in India\'s biggest AI competition, testing advanced AI concepts, machine learning logic, and prompt engineering skills.',
+    image: '/certificate.png',
   },
 ]
 
