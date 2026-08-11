@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --void: #000000;
+  --void: #050505;
   --ember: #00f0ff;
   --ash: #a1a1aa;
   --cloud: #ffffff;
@@ -11,12 +11,12 @@
 
 html {
   scroll-behavior: smooth;
-  background-color: #000000;
+  background-color: #050505;
   color: #ffffff;
 }
 
 body {
-  background-color: #000000;
+  background-color: #050505;
   color: #ffffff;
   font-family: 'Poppins', 'Inter', sans-serif;
   overflow-x: hidden;
@@ -24,14 +24,14 @@ body {
 
 ::selection {
   background: #00f0ff;
-  color: #000000;
+  color: #050505;
 }
 
 ::-webkit-scrollbar {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #000000;
+  background: #050505;
 }
 ::-webkit-scrollbar-thumb {
   background: #27272a;
@@ -53,15 +53,15 @@ body {
 }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.025);
+  background: rgba(255, 255, 255, 0.02);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 1.5rem;
 }
 .glass-card:hover {
-  border-color: rgba(0, 240, 255, 0.4);
-  box-shadow: 0 0 35px rgba(0, 240, 255, 0.15);
+  border-color: rgba(0, 240, 255, 0.35);
+  box-shadow: 0 0 35px rgba(0, 240, 255, 0.12);
 }
 
 .gradient-text-ember {
@@ -72,7 +72,7 @@ body {
 }
 
 .glow-ember {
-  box-shadow: 0 0 35px rgba(0, 240, 255, 0.4);
+  box-shadow: 0 0 30px rgba(0, 240, 255, 0.35);
 }
 
 @keyframes float {

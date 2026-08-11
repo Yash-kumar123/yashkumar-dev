@@ -45,6 +45,7 @@ export default function App() {
 
       <div className="noise-overlay" aria-hidden="true" />
       <Navbar active={active} onNavigate={handleNavigate} />
+
       <main className="relative z-10">
         <Hero onNavigate={handleNavigate} />
         <About />

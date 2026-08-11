@@ -39,10 +39,10 @@ export default function Navbar({ active, onNavigate }) {
           onClick={() => handleClick('hero')}
           className="group flex items-center gap-3 text-left focus:outline-none"
         >
-          <span className="w-9 h-9 rounded-full bg-white/5 border border-white/15 flex items-center justify-center font-display font-bold text-xs text-ember group-hover:border-ember/50 group-hover:shadow-[0_0_15px_rgba(252,107,47,0.4)] transition-all">
+          <span className="w-9 h-9 rounded-full bg-white/5 border border-white/15 flex items-center justify-center font-display font-bold text-xs text-cyan group-hover:border-cyan/50 group-hover:shadow-[0_0_15px_rgba(0,240,255,0.4)] transition-all">
             YK
           </span>
-          <span className="font-display font-bold text-sm tracking-tight text-white group-hover:text-ember transition-colors hidden sm:inline">
+          <span className="font-display font-bold text-sm tracking-tight text-white group-hover:text-cyan transition-colors hidden sm:inline">
             Yash Kumar
           </span>
         </button>
@@ -56,11 +56,11 @@ export default function Navbar({ active, onNavigate }) {
                 key={l.id}
                 onClick={() => handleClick(l.id)}
                 className={`relative px-4 py-1.5 text-xs font-mono tracking-wider transition-colors duration-300 ${
-                  isActive ? 'text-ember font-semibold' : 'text-[#B5B5B5] hover:text-white'
+                  isActive ? 'text-cyan font-semibold' : 'text-ash hover:text-white'
                 }`}
               >
                 {isActive && (
-                  <span className="absolute inset-0 bg-ember/15 rounded-full border border-ember/40 -z-10" />
+                  <span className="absolute inset-0 bg-cyan/15 rounded-full border border-cyan/40 -z-10" />
                 )}
                 {l.label}
               </button>
@@ -73,7 +73,7 @@ export default function Navbar({ active, onNavigate }) {
           <a
             href={profile.resumeUrl}
             download
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-ember/50 bg-ember/15 text-white text-xs font-mono tracking-wider hover:bg-ember transition-all duration-300 shadow-[0_0_20px_rgba(252,107,47,0.25)]"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan/50 bg-cyan/15 text-white text-xs font-mono tracking-wider hover:bg-cyan hover:text-black transition-all duration-300 shadow-[0_0_20px_rgba(0,240,255,0.25)]"
           >
             <Download size={13} />
             <span>RESUME</span>

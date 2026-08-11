@@ -49,7 +49,7 @@ export default function About() {
               transition={{ duration: 0.4 }}
               className="relative group w-64 h-80 sm:w-72 sm:h-96 rounded-3xl overflow-hidden bg-[#0d0d0d] border border-cyan/40 p-2.5 shadow-[0_0_35px_rgba(0,240,255,0.25)] transition-all duration-500 hover:border-cyan hover:shadow-[0_0_50px_rgba(0,240,255,0.45)]"
             >
-              <div className="w-full h-full rounded-2xl overflow-hidden relative bg-[#111111]">
+              <div className="w-full h-full rounded-2xl overflow-hidden relative bg-[#050505]">
                 <img
                   src={profile.photo}
                   alt={profile.name}

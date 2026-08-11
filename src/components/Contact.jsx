@@ -55,14 +55,14 @@ export default function Contact() {
               <div className="space-y-6">
                 {/* Email */}
                 <div className="flex items-start gap-4">
-                  <span className="w-8 h-8 rounded-full bg-ember/10 border border-ember/20 flex items-center justify-center text-ember mt-0.5 shrink-0">
+                  <span className="w-8 h-8 rounded-full bg-cyan/10 border border-cyan/20 flex items-center justify-center text-cyan mt-0.5 shrink-0">
                     <Mail size={16} />
                   </span>
                   <div>
                     <p className="text-xs text-ash uppercase tracking-wider mb-1 font-semibold">Email</p>
                     <a
                       href={`mailto:${profile.email}`}
-                      className="text-sm text-white hover:text-ember transition-colors font-medium"
+                      className="text-sm text-white hover:text-cyan transition-colors font-medium"
                     >
                       {profile.email}
                     </a>
@@ -71,7 +71,7 @@ export default function Contact() {
 
                 {/* Location */}
                 <div className="flex items-start gap-4">
-                  <span className="w-8 h-8 rounded-full bg-ember/10 border border-ember/20 flex items-center justify-center text-ember mt-0.5 shrink-0">
+                  <span className="w-8 h-8 rounded-full bg-cyan/10 border border-cyan/20 flex items-center justify-center text-cyan mt-0.5 shrink-0">
                     <MapPin size={16} />
                   </span>
                   <div>
@@ -102,7 +102,7 @@ export default function Contact() {
                   href={`https://${profile.github}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:border-ember/40 hover:bg-white/10 transition-all group text-ash hover:text-white"
+                  className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:border-cyan/40 hover:bg-white/10 transition-all group text-ash hover:text-white"
                   title="GitHub"
                 >
                   <Github size={16} />
@@ -111,7 +111,7 @@ export default function Contact() {
                   href={`https://${profile.linkedin}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:border-ember/40 hover:bg-white/10 transition-all group text-ash hover:text-white"
+                  className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:border-cyan/40 hover:bg-white/10 transition-all group text-ash hover:text-white"
                   title="LinkedIn"
                 >
                   <Linkedin size={16} />
@@ -138,7 +138,7 @@ export default function Contact() {
                 name="name"
                 value={form.name}
                 onChange={handleChange}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-muted focus:outline-none focus:border-ember/50 transition-colors"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-muted focus:outline-none focus:border-cyan/50 focus:ring-1 focus:ring-cyan/50 transition-colors"
                 placeholder="Your name"
                 required
               />
@@ -154,7 +154,7 @@ export default function Contact() {
                 name="email"
                 value={form.email}
                 onChange={handleChange}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-muted focus:outline-none focus:border-ember/50 transition-colors"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-muted focus:outline-none focus:border-cyan/50 focus:ring-1 focus:ring-cyan/50 transition-colors"
                 placeholder="your@email.com"
                 required
               />
@@ -170,7 +170,7 @@ export default function Contact() {
                 name="message"
                 value={form.message}
                 onChange={handleChange}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-muted focus:outline-none focus:border-ember/50 transition-colors resize-none"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-muted focus:outline-none focus:border-cyan/50 focus:ring-1 focus:ring-cyan/50 transition-colors resize-none"
                 placeholder="Tell me about your project or opportunity..."
                 required
               />
@@ -178,7 +178,7 @@ export default function Contact() {
 
             <button
               type="submit"
-              className="w-full inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full font-medium text-sm tracking-wide bg-ember text-white hover:bg-ember-bright shadow-[0_0_25px_rgba(252,107,47,0.4)] transition-all duration-300 group"
+              className="w-full inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full font-medium text-sm tracking-wide bg-cyan text-black hover:bg-cyan/90 shadow-[0_0_25px_rgba(0,240,255,0.3)] transition-all duration-300 group"
             >
               <span>Send Message</span>
               <Send size={15} className="transition-transform duration-300 group-hover:translate-x-1" />

@@ -37,13 +37,13 @@ export default function Achievements() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="mb-14 p-6 sm:p-8 rounded-3xl border border-ember/40 bg-ember/5 relative overflow-hidden group shadow-[0_0_30px_rgba(252,107,47,0.15)]"
+            className="mb-14 p-6 sm:p-8 rounded-3xl border border-cyan/40 bg-cyan/5 relative overflow-hidden group shadow-[0_0_30px_rgba(0,240,255,0.15)]"
           >
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative z-10">
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
-                  <ShieldCheck size={18} className="text-ember shrink-0" />
-                  <span className="text-xs font-mono font-bold text-ember uppercase tracking-widest">
+                  <ShieldCheck size={18} className="text-cyan shrink-0" />
+                  <span className="text-xs font-mono font-bold text-cyan uppercase tracking-widest">
                     VERIFIED CERTIFICATE · {cert.date}
                   </span>
                 </div>
@@ -56,20 +56,20 @@ export default function Achievements() {
                   Organized by <span className="text-white font-semibold">{cert.issuer}</span>
                 </p>
 
-                <p className="text-sm text-[#B5B5B5] leading-relaxed pt-1">
+                <p className="text-sm text-silver leading-relaxed pt-1">
                   {cert.description}
                 </p>
 
-                <div className="text-xs font-mono text-ember pt-1">
+                <div className="text-xs font-mono text-cyan pt-1">
                   {cert.stats}
                 </div>
               </div>
 
               <button
                 onClick={() => setSelectedCert(cert)}
-                className="shrink-0 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-ember text-white font-mono text-xs font-semibold tracking-wider hover:bg-ember-bright transition-all shadow-[0_0_20px_rgba(252,107,47,0.4)]"
+                className="shrink-0 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-cyan text-black font-mono text-xs font-semibold tracking-wider hover:bg-cyan-bright transition-all shadow-[0_0_20px_rgba(0,240,255,0.4)]"
               >
-                <Eye size={14} />
+                <ExternalLink size={14} />
                 <span>VIEW CERTIFICATE</span>
               </button>
             </div>
@@ -190,17 +190,17 @@ export default function Achievements() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-obsidian border border-ember/30 p-6 sm:p-8 rounded-3xl max-w-2xl w-full text-left space-y-6 relative shadow-[0_0_50px_rgba(252,107,47,0.3)]"
+              className="bg-obsidian border border-cyan/30 p-6 sm:p-8 rounded-3xl max-w-2xl w-full text-left space-y-6 relative shadow-[0_0_50px_rgba(0,240,255,0.3)] max-h-[90vh] overflow-y-auto"
             >
               <button
                 onClick={() => setSelectedCert(null)}
-                className="absolute top-6 right-6 p-2 rounded-full bg-white/5 border border-white/10 text-ash hover:text-white hover:border-ember/40 transition-all"
+                className="absolute top-6 right-6 p-2 rounded-full bg-white/5 border border-white/10 text-ash hover:text-white hover:border-cyan/40 transition-all z-10"
               >
                 <X size={18} />
               </button>
 
-              <div className="space-y-2">
-                <span className="text-xs font-mono text-ember uppercase tracking-widest block font-bold">
+              <div className="space-y-2 pr-8">
+                <span className="text-xs font-mono text-cyan uppercase tracking-widest block font-bold">
                   OFFICIAL CERTIFICATE OF PARTICIPATION
                 </span>
                 <h3 className="text-2xl sm:text-3xl font-extrabold text-white">
@@ -224,7 +224,7 @@ export default function Achievements() {
 
                 <div className="p-6 rounded-2xl bg-white/5 border border-white/10 space-y-3 font-poppins text-sm text-silver">
                   <p>
-                    This certificate is proudly presented to <strong className="text-white">Yash Kumar</strong> in recognition of being among the select students who competed in <strong className="text-ember">QuizOff 2026: India's Biggest AI Quiz</strong>, organized by <strong className="text-white">CampusCrew</strong> and hosted on <strong className="text-white">Unstop</strong>.
+                    This certificate is proudly presented to <strong className="text-white">Yash Kumar</strong> in recognition of being among the select students who competed in <strong className="text-cyan">QuizOff 2026: India's Biggest AI Quiz</strong>, organized by <strong className="text-white">CampusCrew</strong> and hosted on <strong className="text-white">Unstop</strong>.
                   </p>
 
                   <div className="pt-2 border-t border-white/10 flex flex-wrap justify-between text-xs font-mono text-ash gap-2">
@@ -237,7 +237,7 @@ export default function Achievements() {
               <div className="flex justify-end pt-2">
                 <button
                   onClick={() => setSelectedCert(null)}
-                  className="px-6 py-2.5 rounded-full bg-ember text-white font-mono text-xs font-semibold hover:bg-ember-bright transition-all"
+                  className="px-6 py-2.5 rounded-full bg-cyan text-black font-mono text-xs font-semibold hover:bg-cyan-bright transition-all"
                 >
                   CLOSE PREVIEW
                 </button>
