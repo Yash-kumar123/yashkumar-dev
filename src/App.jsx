@@ -3,14 +3,13 @@ import { AnimatePresence } from 'framer-motion'
 import { initSmoothScroll } from './utils/smoothScroll'
 
 import LoadingScreen from './components/LoadingScreen'
-import CustomCursor from './components/CustomCursor'
 import ShaderAtmosphere from './components/three/ShaderAtmosphere'
 import Navbar from './components/Navbar'
 import StatusBar from './components/StatusBar'
 import Hero from './components/Hero'
 import About from './components/About'
+import EngineeringPhilosophy from './components/EngineeringPhilosophy'
 import Skills from './components/Skills'
-import SystemDesignSection from './components/SystemDesignSection'
 import Projects from './components/Projects'
 import Achievements from './components/Achievements'
 import Contact from './components/Contact'
@@ -19,8 +18,8 @@ import Footer from './components/Footer'
 const SECTIONS = [
   { id: 'hero', navId: 'hero' },
   { id: 'about', navId: 'about' },
+  { id: 'philosophy', navId: 'philosophy' },
   { id: 'stack', navId: 'stack' },
-  { id: 'systems', navId: 'systems' },
   { id: 'projects', navId: 'work' },
   { id: 'achievements', navId: 'achievements' },
   { id: 'contact', navId: 'contact' },
@@ -30,7 +29,7 @@ export default function App() {
   const [loading, setLoading] = useState(true)
   const [activeSection, setActiveSection] = useState('hero')
 
-  // Initialize Lenis smooth scroll with GSAP ScrollTrigger
+  // Initialize Lenis smooth scroll
   useEffect(() => {
     const cleanupLenis = initSmoothScroll()
     return () => {
@@ -63,20 +62,16 @@ export default function App() {
   }, [loading])
 
   return (
-    <div className="min-h-screen bg-void text-primary font-sans selection:bg-cyan selection:text-void relative antialiased">
-      {/* Cinematic Fast Loading Sequence */}
+    <div className="min-h-screen bg-cream text-dark font-sans selection:bg-lime selection:text-dark relative antialiased">
+      {/* Short 1-Second Luminous Opening Sequence */}
       <AnimatePresence mode="wait">
         {loading && <LoadingScreen key="loader" onComplete={() => setLoading(false)} />}
       </AnimatePresence>
 
-      {/* Atmospheric Background Layers */}
+      {/* Multi-State Shader Gradient Atmosphere */}
       <ShaderAtmosphere />
-      <div className="technical-noise" aria-hidden="true" />
 
-      {/* High-Precision Desktop Custom Cursor */}
-      <CustomCursor />
-
-      {/* Floating Glass Navigation */}
+      {/* Floating Light Navigation */}
       <Navbar activeSection={activeSection} />
 
       {/* Top Status & Metrics Bar */}
@@ -88,8 +83,8 @@ export default function App() {
       <main className="relative z-10">
         <Hero />
         <About />
+        <EngineeringPhilosophy />
         <Skills />
-        <SystemDesignSection />
         <Projects />
         <Achievements />
         <Contact />

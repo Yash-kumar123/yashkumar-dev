@@ -10,7 +10,7 @@ export default function ArchitectureModal({ project, onClose }) {
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 sm:p-6 md:p-10 bg-void/90 backdrop-blur-2xl font-sans overflow-y-auto">
+      <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 sm:p-6 md:p-10 bg-dark/40 backdrop-blur-xl font-sans overflow-y-auto">
         {/* Backdrop click to close */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -20,54 +20,54 @@ export default function ArchitectureModal({ project, onClose }) {
           className="fixed inset-0"
         />
 
-        {/* Modal Window Container */}
+        {/* Modal Window Container (Clean Light Studio Aesthetic) */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 25 }}
+          initial={{ opacity: 0, scale: 0.96, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 20 }}
+          exit={{ opacity: 0, scale: 0.96, y: 15 }}
           transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-          className="relative z-10 w-full max-w-5xl my-auto glass-panel bg-void/95 border-white/[0.12] rounded-3xl p-6 sm:p-10 shadow-[0_0_80px_rgba(0,0,0,0.8)] overflow-hidden"
+          className="relative z-10 w-full max-w-5xl my-auto bg-white border border-black/[0.08] rounded-4xl p-6 sm:p-10 shadow-2xl overflow-hidden"
         >
           {/* Header Bar */}
-          <div className="flex items-start justify-between border-b border-white/[0.08] pb-6 mb-8">
+          <div className="flex items-start justify-between border-b border-black/[0.06] pb-6 mb-8">
             <div className="space-y-1.5">
-              <div className="flex items-center gap-2 text-cyan font-mono text-xs uppercase tracking-widest">
-                <Activity size={13} className="animate-pulse" />
-                <span>ENGINEERING CASE STUDY // SYSTEM ARCHITECTURE</span>
+              <div className="flex items-center gap-2 text-sky font-mono text-xs uppercase tracking-widest font-semibold">
+                <Activity size={14} className="animate-pulse" />
+                <span>INTERACTIVE CASE STUDY // SYSTEM ARCHITECTURE</span>
               </div>
-              <h2 className="font-display text-2xl sm:text-4xl font-extrabold text-primary tracking-tight">
+              <h2 className="font-display text-2xl sm:text-4xl font-black text-dark tracking-tight">
                 {project.name}
               </h2>
-              <p className="text-secondary text-sm font-sans">{project.subtitle}</p>
+              <p className="text-dark-muted text-sm font-sans">{project.subtitle}</p>
             </div>
 
             <button
               onClick={onClose}
-              className="p-2.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-secondary hover:text-primary hover:border-cyan/40 hover:bg-cyan/[0.05] transition-all"
+              className="p-2.5 rounded-full bg-soft border border-black/[0.08] text-dark-muted hover:text-dark transition-all"
               aria-label="Close Architecture Modal"
             >
               <X size={18} />
             </button>
           </div>
 
-          {/* Data Pipeline & Execution Stream (Animated Pipeline) */}
-          <div className="mb-8 p-5 sm:p-6 rounded-2xl bg-[#09090D] border border-white/[0.08]">
+          {/* End-to-End Pipeline Execution Stream */}
+          <div className="mb-8 p-6 rounded-3xl bg-soft border border-black/[0.06]">
             <div className="flex items-center justify-between mb-4">
-              <span className="font-mono text-xs text-muted tracking-widest uppercase">
+              <span className="font-mono text-xs text-dark-muted tracking-widest uppercase font-semibold">
                 End-To-End Execution Stream
               </span>
-              <span className="font-mono text-[10px] text-cyan">LATENCY OPTIMIZED</span>
+              <span className="font-mono text-[10px] text-sky font-bold">LATENCY &amp; STATE VERIFIED</span>
             </div>
 
             <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 text-xs font-mono">
               {arch.flow.map((node, idx) => (
                 <div key={node} className="flex items-center gap-2 sm:gap-3">
-                  <div className="px-3.5 py-2 rounded-xl bg-white/[0.03] border border-white/[0.08] text-primary flex items-center gap-2 hover:border-cyan/40 transition-colors">
-                    <span className="w-1.5 h-1.5 rounded-full bg-cyan" />
+                  <div className="px-4 py-2.5 rounded-2xl bg-white border border-black/[0.08] text-dark font-medium flex items-center gap-2 shadow-soft-sm hover:border-sky transition-colors">
+                    <span className="w-2 h-2 rounded-full bg-sky" />
                     <span>{node}</span>
                   </div>
                   {idx < arch.flow.length - 1 && (
-                    <ArrowRight size={13} className="text-cyan shrink-0 animate-pulse" />
+                    <ArrowRight size={14} className="text-sky shrink-0 animate-pulse" />
                   )}
                 </div>
               ))}
@@ -77,37 +77,37 @@ export default function ArchitectureModal({ project, onClose }) {
           {/* Grid: Challenge vs Solution */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 font-sans">
             {/* Engineering Challenge */}
-            <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.06] space-y-3">
-              <div className="font-mono text-xs font-semibold text-red-400 uppercase tracking-wider flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-red-400" />
+            <div className="p-6 sm:p-8 rounded-3xl bg-coral-light border border-coral/20 space-y-3">
+              <div className="font-mono text-xs font-bold text-coral uppercase tracking-wider flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-coral" />
                 <span>The Engineering Challenge</span>
               </div>
-              <p className="text-sm text-secondary leading-relaxed">
+              <p className="text-sm text-dark-muted leading-relaxed">
                 {project.challenge || project.description}
               </p>
             </div>
 
             {/* Architectural Solution */}
-            <div className="p-6 rounded-2xl bg-white/[0.02] border border-cyan/20 space-y-3">
-              <div className="font-mono text-xs font-semibold text-cyan uppercase tracking-wider flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-cyan" />
+            <div className="p-6 sm:p-8 rounded-3xl bg-sky-light border border-sky/20 space-y-3">
+              <div className="font-mono text-xs font-bold text-sky uppercase tracking-wider flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-sky" />
                 <span>System Architecture Solution</span>
               </div>
-              <p className="text-sm text-secondary leading-relaxed">
+              <p className="text-sm text-dark-muted leading-relaxed">
                 {project.solution || project.bullets?.[0]}
               </p>
             </div>
           </div>
 
           {/* Key Metrics / Highlights */}
-          <div className="mb-8 p-5 rounded-2xl bg-white/[0.02] border border-white/[0.06]">
-            <div className="font-mono text-xs text-muted tracking-widest uppercase mb-3">
+          <div className="mb-8 p-6 rounded-3xl bg-soft border border-black/[0.06]">
+            <div className="font-mono text-xs text-dark-muted tracking-widest uppercase mb-3 font-semibold">
               Production Verified Metrics
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 font-mono text-xs">
               {(project.metrics || ['Production Ready', 'Zero Downtime', 'Sub-second Latency']).map((m) => (
-                <div key={m} className="flex items-center gap-2 text-primary">
-                  <ShieldCheck size={14} className="text-cyan shrink-0" />
+                <div key={m} className="flex items-center gap-2 text-dark font-medium">
+                  <ShieldCheck size={16} className="text-sky shrink-0" />
                   <span>{m}</span>
                 </div>
               ))}
@@ -115,12 +115,12 @@ export default function ArchitectureModal({ project, onClose }) {
           </div>
 
           {/* Tech Stack Chips & Action Links */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-6 border-t border-white/[0.08]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-6 border-t border-black/[0.06]">
             <div className="flex flex-wrap gap-2">
               {project.stack.map((t) => (
                 <span
                   key={t}
-                  className="px-3 py-1 rounded-lg bg-white/[0.03] border border-white/[0.08] font-mono text-xs text-secondary"
+                  className="px-3.5 py-1.5 rounded-full bg-white border border-black/[0.08] font-mono text-xs text-dark shadow-soft-sm font-medium"
                 >
                   {t}
                 </span>
@@ -133,7 +133,7 @@ export default function ArchitectureModal({ project, onClose }) {
                   href={project.liveUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-mono text-xs font-semibold tracking-wider bg-cyan text-void hover:bg-cyan-bright transition-all shadow-[0_0_20px_rgba(0,229,255,0.3)]"
+                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-mono text-xs font-semibold tracking-wider bg-dark text-white hover:bg-sky transition-all shadow-soft-sm"
                 >
                   <span>LIVE DEMO</span>
                   <ExternalLink size={13} />
@@ -144,7 +144,7 @@ export default function ArchitectureModal({ project, onClose }) {
                   href={project.repoUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-mono text-xs font-medium text-primary bg-white/[0.04] border border-white/[0.1] hover:border-cyan/40 hover:text-cyan transition-all"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-mono text-xs font-medium text-dark bg-white border border-black/[0.1] hover:border-black/[0.25] transition-all shadow-soft-sm"
                 >
                   <Github size={13} />
                   <span>SOURCE REPO</span>

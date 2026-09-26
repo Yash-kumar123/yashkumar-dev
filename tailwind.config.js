@@ -4,50 +4,67 @@ export default {
   theme: {
     extend: {
       colors: {
-        void: '#070707',
-        primary: '#070707',
-        secondary: '#0D0E12',
-        surface: {
-          DEFAULT: '#14151A',
-          subtle: '#0D0E12',
-          elevated: '#1B1D23',
-          card: '#161820',
+        cream: '#FAFAF7',
+        soft: '#F4F5F2',
+        card: '#FFFFFF',
+        dark: {
+          DEFAULT: '#111318',
+          subtle: '#232731',
+          muted: '#5D626D',
         },
-        border: {
-          subtle: 'rgba(255, 255, 255, 0.06)',
-          light: 'rgba(255, 255, 255, 0.12)',
-          accent: 'rgba(0, 240, 255, 0.3)',
-          purple: 'rgba(112, 0, 255, 0.3)',
+        aqua: {
+          DEFAULT: '#35D6D0',
+          light: '#E6FAF9',
+          glow: 'rgba(53, 214, 208, 0.35)',
         },
-        paper: '#F5F3EE',
-        muted: '#9698A3',
-        cyan: {
-          DEFAULT: '#00F0FF',
-          bright: '#38BDF8',
-          glow: 'rgba(0, 240, 255, 0.35)',
-          dim: 'rgba(0, 240, 255, 0.12)',
+        sky: {
+          DEFAULT: '#5BA8FF',
+          light: '#EEF6FF',
+          glow: 'rgba(91, 168, 255, 0.35)',
         },
-        violet: {
-          DEFAULT: '#7000FF',
-          bright: '#8B5CF6',
-          glow: 'rgba(112, 0, 255, 0.35)',
-          dim: 'rgba(112, 0, 255, 0.12)',
+        mint: {
+          DEFAULT: '#78E5B1',
+          light: '#EDFCF5',
+        },
+        lime: {
+          DEFAULT: '#C6F36B',
+          light: '#F8FEEF',
+        },
+        coral: {
+          DEFAULT: '#FF7F70',
+          light: '#FFF0EE',
+        },
+        peach: {
+          DEFAULT: '#FFB68A',
+          light: '#FFF5EF',
+        },
+        lavender: {
+          DEFAULT: '#A994FF',
+          light: '#F4F1FF',
+          glow: 'rgba(169, 148, 255, 0.35)',
         },
       },
       fontFamily: {
-        display: ['"Space Grotesk"', 'sans-serif'],
-        sans: ['Inter', 'sans-serif'],
+        display: ['"Space Grotesk"', '"Plus Jakarta Sans"', 'sans-serif'],
+        sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'monospace'],
       },
       letterSpacing: {
-        tighter: '-0.04em',
+        tightest: '-0.04em',
+        tighter: '-0.03em',
         tight: '-0.02em',
         widest: '0.25em',
-        ultra: '0.35em',
       },
-      animation: {
-        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'spin-slow': 'spin 24s linear infinite',
+      boxShadow: {
+        'soft-sm': '0 2px 10px rgba(17, 19, 24, 0.04)',
+        'soft-md': '0 8px 30px rgba(17, 19, 24, 0.06)',
+        'soft-lg': '0 20px 50px rgba(17, 19, 24, 0.08)',
+        'soft-xl': '0 30px 70px rgba(17, 19, 24, 0.12)',
+        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.06)',
+      },
+      borderRadius: {
+        '3xl': '1.75rem',
+        '4xl': '2.25rem',
       },
     },
   },
