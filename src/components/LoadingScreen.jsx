@@ -2,73 +2,97 @@ import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 
 export default function LoadingScreen({ onComplete }) {
-  const [count, setCount] = useState(0)
+  const [phase, setPhase] = useState(0) // 0: init coordinates -> 1: Yash Kumar -> 2: Full Stack/AI -> 3: Reveal
 
   useEffect(() => {
-    const duration = 1800 // 1.8 seconds loading experience
-    const intervalTime = 20
-    const steps = duration / intervalTime
-    const increment = 100 / steps
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      onComplete()
+      return
+    }
 
-    const timer = setInterval(() => {
-      setCount((prev) => {
-        const next = prev + increment
-        if (next >= 100) {
-          clearInterval(timer)
-          setTimeout(onComplete, 400)
-          return 100
-        }
-        return next
-      })
-    }, intervalTime)
+    // Sequence stages (total ~1.3 seconds)
+    const t1 = setTimeout(() => setPhase(1), 300)
+    const t2 = setTimeout(() => setPhase(2), 700)
+    const t3 = setTimeout(() => {
+      setPhase(3)
+      setTimeout(onComplete, 300)
+    }, 1150)
 
-    return () => clearInterval(timer)
+    return () => {
+      clearTimeout(t1)
+      clearTimeout(t2)
+      clearTimeout(t3)
+    }
   }, [onComplete])
 
   return (
     <motion.div
       initial={{ opacity: 1 }}
-      exit={{ opacity: 0, transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] } }}
-      className="fixed inset-0 z-[100] bg-void flex flex-col items-center justify-between py-16 px-8 select-none font-poppins"
+      exit={{
+        opacity: 0,
+        scale: 1.02,
+        filter: 'blur(10px)',
+        transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
+      }}
+      className="fixed inset-0 z-[120] bg-void flex flex-col justify-between p-8 sm:p-14 select-none font-mono text-paper"
     >
-      {/* Top Brand Name */}
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="text-xs sm:text-sm text-ash font-display tracking-[0.35em] uppercase font-semibold text-center"
-      >
-        YASH KUMAR
-      </motion.div>
-
-      {/* Center 0-100 Count Up Display */}
-      <div className="flex flex-col items-center my-auto">
-        <motion.span
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="font-display font-black text-7xl sm:text-9xl text-white tracking-tighter tabular-nums drop-shadow-[0_0_35px_rgba(0,240,255,0.5)]"
-        >
-          {Math.floor(count)}
-          <span className="text-cyan text-4xl sm:text-6xl font-light ml-1">%</span>
-        </motion.span>
-        <span className="text-[11px] font-mono text-cyan uppercase tracking-[0.3em] mt-3">
-          INITIALIZING DIGITAL EXPERIENCE
-        </span>
+      {/* Top Coordinate HUD */}
+      <div className="flex items-center justify-between text-[11px] text-muted tracking-widest border-b border-white/[0.06] pb-4">
+        <div className="flex items-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-cyan animate-pulse" />
+          <span className="text-secondary font-medium">SYS_INIT // 28.6692° N, 77.4538° E</span>
+        </div>
+        <div className="hidden sm:block text-muted">
+          INITIALIZING DIGITAL CORE · 2026
+        </div>
       </div>
 
-      {/* Bottom Loading Progress Bar Track & Fill */}
-      <div className="w-full max-w-md space-y-2">
-        <div className="w-full h-[3px] bg-white/10 rounded-full overflow-hidden relative">
-          <motion.div
-            className="h-full bg-cyan shadow-[0_0_15px_#00f0ff]"
-            style={{ width: `${count}%` }}
-            transition={{ ease: 'linear' }}
-          />
+      {/* Center Cinematic Stage Reveal */}
+      <div className="my-auto max-w-4xl space-y-4">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+          className="text-xs text-cyan tracking-[0.35em] uppercase font-semibold"
+        >
+          {phase === 0 ? 'INITIALIZING EXPERIENCE...' : 'DIGITAL CORE ONLINE'}
+        </motion.div>
+
+        <motion.h1
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: phase >= 1 ? 1 : 0, y: phase >= 1 ? 0 : 15 }}
+          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          className="font-display text-5xl sm:text-7xl md:text-8xl font-black tracking-tighter text-paper leading-[0.9]"
+        >
+          YASH KUMAR
+        </motion.h1>
+
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: phase >= 2 ? 1 : 0, y: phase >= 2 ? 0 : 15 }}
+          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          className="text-sm sm:text-base text-muted font-sans tracking-wide"
+        >
+          FULL STACK <span className="text-cyan font-mono font-normal">/</span> APPLIED AI ENGINEER
+        </motion.div>
+
+        {/* Minimal Progress Indicator */}
+        <div className="pt-6 max-w-xs">
+          <div className="h-[1.5px] w-full bg-white/[0.08] overflow-hidden rounded-full">
+            <motion.div
+              className="h-full bg-cyan"
+              initial={{ width: '0%' }}
+              animate={{ width: phase === 0 ? '25%' : phase === 1 ? '60%' : '100%' }}
+              transition={{ duration: 0.35, ease: 'easeInOut' }}
+            />
+          </div>
         </div>
-        <div className="flex justify-between text-[10px] font-mono text-ash tracking-wider">
-          <span>PORTFOLIO</span>
-          <span>SHIPPING PRODUCTS</span>
-        </div>
+      </div>
+
+      {/* Bottom Telemetry */}
+      <div className="flex items-center justify-between text-[11px] text-muted tracking-wider border-t border-white/[0.06] pt-4">
+        <span>SMART INDIA HACKATHON '25 FINALIST</span>
+        <span className="text-cyan font-semibold">STANDBY FOR ENVIRONMENT REVEAL</span>
       </div>
     </motion.div>
   )

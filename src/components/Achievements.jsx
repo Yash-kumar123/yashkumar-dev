@@ -1,65 +1,52 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Award, GraduationCap, Trophy, Sparkles, ShieldCheck, ExternalLink, X, Eye } from 'lucide-react'
-import { achievements, certificates, education } from '../data/portfolioData'
+import { Award, ShieldCheck, ExternalLink, X, Calendar, CheckCircle } from 'lucide-react'
+import { achievements, certificates } from '../data/portfolioData'
 
 export default function Achievements() {
   const [selectedCert, setSelectedCert] = useState(null)
 
   return (
-    <section id="journey" className="relative py-32 md:py-48 bg-void border-t border-white/5 font-poppins">
-      {/* Background Radial Glow */}
-      <div
-        className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full pointer-events-none blur-[150px]"
-        style={{ backgroundColor: 'rgba(252,107,47,0.12)' }}
-        aria-hidden="true"
-      />
-
-      <div className="max-w-4xl mx-auto px-6 md:px-12 relative z-10">
+    <section id="achievements" className="relative py-28 sm:py-36 px-6 sm:px-10 lg:px-16 border-t border-white/[0.07] bg-void">
+      <div className="max-w-5xl mx-auto">
         {/* Section Header */}
-        <div className="mb-16 md:mb-20">
-          <div className="flex items-center gap-2 mb-3">
-            <span className="w-8 h-[2px] bg-ember inline-block rounded-full" />
-            <span className="text-ember text-xs font-bold tracking-[0.25em] uppercase">Experience &amp; Recognition</span>
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+          <div>
+            <div className="flex items-center gap-3 font-mono text-xs text-cyan tracking-[0.25em] uppercase mb-3">
+              <span className="text-paper font-bold">03</span>
+              <span className="w-8 h-[1px] bg-cyan/50" />
+              <span>RECOGNITION</span>
+            </div>
+            <h2 className="font-display text-4xl sm:text-6xl md:text-7xl font-black tracking-tighter text-paper uppercase">
+              ACHIEVEMENTS<br />&amp; TIMELINE
+            </h2>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-[1.1] tracking-tight">
-            Where I've Been
-          </h2>
-          <p className="mt-4 text-base md:text-lg text-ash max-w-xl leading-relaxed font-normal">
-            My journey through engineering education, hackathons, and certified achievements.
+          <p className="text-sm sm:text-base text-muted max-w-sm font-sans leading-relaxed">
+            National hackathon milestones, verified credentials, and competitive engineering benchmarks.
           </p>
         </div>
 
-        {/* Featured Certificate Spotlight Badge */}
+        {/* Featured Certificate Card Spotlight */}
         {certificates.map((cert) => (
-          <motion.div
+          <div
             key={cert.id}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mb-14 p-6 sm:p-8 rounded-3xl border border-cyan/40 bg-cyan/5 relative overflow-hidden group shadow-[0_0_30px_rgba(0,240,255,0.15)]"
+            className="mb-14 p-6 sm:p-8 rounded-3xl liquid-glass border-cyan/30 bg-cyan/[0.03] relative overflow-hidden"
           >
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative z-10">
               <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <ShieldCheck size={18} className="text-cyan shrink-0" />
-                  <span className="text-xs font-mono font-bold text-cyan uppercase tracking-widest">
-                    VERIFIED CERTIFICATE · {cert.date}
-                  </span>
+                <div className="flex items-center gap-2 text-cyan font-mono text-xs tracking-wider">
+                  <ShieldCheck size={16} />
+                  <span>VERIFIED NATIONAL CREDENTIAL · {cert.date}</span>
                 </div>
-
-                <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+                <h3 className="font-display text-xl sm:text-2xl font-bold text-paper">
                   {cert.title}
                 </h3>
-
-                <p className="text-xs font-mono text-ash">
-                  Organized by <span className="text-white font-semibold">{cert.issuer}</span>
+                <p className="text-xs font-mono text-muted">
+                  Issuer: <span className="text-paper font-medium">{cert.issuer}</span>
                 </p>
-
-                <p className="text-sm text-silver leading-relaxed pt-1">
+                <p className="text-sm text-muted/90 font-sans max-w-2xl leading-relaxed pt-1">
                   {cert.description}
                 </p>
-
                 <div className="text-xs font-mono text-cyan pt-1">
                   {cert.stats}
                 </div>
@@ -67,185 +54,114 @@ export default function Achievements() {
 
               <button
                 onClick={() => setSelectedCert(cert)}
-                className="shrink-0 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-cyan text-black font-mono text-xs font-semibold tracking-wider hover:bg-cyan-bright transition-all shadow-[0_0_20px_rgba(0,240,255,0.4)]"
+                data-cursor="cta"
+                className="shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-mono text-xs font-semibold tracking-wider bg-cyan text-void hover:bg-cyan-bright transition-all shadow-[0_0_20px_rgba(0,240,255,0.3)]"
               >
-                <ExternalLink size={14} />
+                <ExternalLink size={13} />
                 <span>VIEW CERTIFICATE</span>
               </button>
             </div>
-          </motion.div>
+          </div>
         ))}
 
-        {/* Experience & Achievements List */}
-        <div className="space-y-12">
-          {/* Education Milestone */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="group pb-12 border-b border-white/10 flex flex-col md:flex-row md:items-start justify-between gap-6 md:gap-12 transition-colors duration-300"
-          >
-            <div className="md:w-1/3 flex-shrink-0">
-              <span className="text-xs font-mono font-medium text-ash tracking-wider block mb-1">
-                {education.years}
-              </span>
-              <span className="text-sm font-semibold tracking-wider uppercase block font-mono text-ember">
-                EDUCATION
-              </span>
-            </div>
-            <div className="md:w-2/3">
-              <h3 className="text-2xl sm:text-3xl font-bold text-white mb-2 tracking-tight group-hover:text-cloud transition-colors">
-                {education.school}
-              </h3>
-              <p className="text-sm font-mono text-ash mb-4">{education.degree}</p>
-              <ul className="space-y-2.5">
-                <li className="flex items-start gap-3 text-sm text-silver font-normal">
-                  <span className="text-ember font-bold mt-0.5 text-xs">▸</span>
-                  <span className="leading-relaxed">Core coursework in Data Structures, Machine Learning, DBMS, and Web Architecture</span>
-                </li>
-                <li className="flex items-start gap-3 text-sm text-silver font-normal">
-                  <span className="text-ember font-bold mt-0.5 text-xs">▸</span>
-                  <span className="leading-relaxed">Built real-world applications in React, Node.js, FastAPI, and Applied AI</span>
-                </li>
-              </ul>
-            </div>
-          </motion.div>
+        {/* Vertical Engineering Timeline */}
+        <div className="relative border-l border-white/[0.1] pl-6 sm:pl-10 space-y-12 my-8 font-mono">
+          {achievements.map((item, index) => (
+            <motion.div
+              key={item.title}
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              className="relative group"
+            >
+              {/* Timeline Pin Dot */}
+              <div className="absolute -left-[31px] sm:-left-[47px] top-1.5 w-3 h-3 rounded-full bg-void border-2 border-cyan group-hover:scale-125 transition-transform" />
 
-          {/* SIH 2025 National Finalist */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="group pb-12 border-b border-white/10 flex flex-col md:flex-row md:items-start justify-between gap-6 md:gap-12 transition-colors duration-300"
-          >
-            <div className="md:w-1/3 flex-shrink-0">
-              <span className="text-xs font-mono font-medium text-ash tracking-wider block mb-1">2025</span>
-              <span className="text-sm font-semibold tracking-wider uppercase block font-mono text-ember">
-                NATIONAL FINALIST
-              </span>
-            </div>
-            <div className="md:w-2/3">
-              <h3 className="text-2xl sm:text-3xl font-bold text-white mb-2 tracking-tight group-hover:text-cloud transition-colors">
-                {achievements[0].title}
-              </h3>
-              <p className="text-sm font-mono text-ash mb-4">Smart India Hackathon 2025</p>
-              <ul className="space-y-2.5">
-                <li className="flex items-start gap-3 text-sm text-silver font-normal">
-                  <span className="text-ember font-bold mt-0.5 text-xs">▸</span>
-                  <span className="leading-relaxed">{achievements[0].detail}</span>
-                </li>
-                <li className="flex items-start gap-3 text-sm text-silver font-normal">
-                  <span className="text-ember font-bold mt-0.5 text-xs">▸</span>
-                  <span className="leading-relaxed">Engineered scalable software solutions under intense hackathon timelines and live evaluation</span>
-                </li>
-              </ul>
-            </div>
-          </motion.div>
+              <div className="space-y-2">
+                <div className="flex flex-wrap items-center gap-3 text-xs">
+                  <span className="font-mono text-base font-bold text-cyan tracking-widest">
+                    {item.year}
+                  </span>
+                  <span className="px-2.5 py-0.5 rounded font-mono text-[10px] bg-white/[0.04] border border-white/[0.08] text-muted">
+                    {item.badge}
+                  </span>
+                  <span className="text-muted">
+                    {item.org}
+                  </span>
+                </div>
 
-          {/* Hacknovate 7.0 & Hacknoccino 4.0 */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="group pb-12 border-b border-white/10 flex flex-col md:flex-row md:items-start justify-between gap-6 md:gap-12 transition-colors duration-300"
-          >
-            <div className="md:w-1/3 flex-shrink-0">
-              <span className="text-xs font-mono font-medium text-ash tracking-wider block mb-1">2024 – 2025</span>
-              <span className="text-sm font-semibold tracking-wider uppercase block font-mono text-ember">
-                HACKATHONS
-              </span>
-            </div>
-            <div className="md:w-2/3">
-              <h3 className="text-2xl sm:text-3xl font-bold text-white mb-2 tracking-tight group-hover:text-cloud transition-colors">
-                Hacknovate 7.0 &amp; Hacknoccino 4.0
-              </h3>
-              <p className="text-sm font-mono text-ash mb-4">Competitive Prototyping</p>
-              <ul className="space-y-2.5">
-                <li className="flex items-start gap-3 text-sm text-silver font-normal">
-                  <span className="text-ember font-bold mt-0.5 text-xs">▸</span>
-                  <span className="leading-relaxed">{achievements[1].detail}</span>
-                </li>
-                <li className="flex items-start gap-3 text-sm text-silver font-normal">
-                  <span className="text-ember font-bold mt-0.5 text-xs">▸</span>
-                  <span className="leading-relaxed">{achievements[2].detail}</span>
-                </li>
-              </ul>
-            </div>
-          </motion.div>
+                <h3 className="font-display text-xl sm:text-2xl font-bold text-paper group-hover:text-cyan transition-colors">
+                  {item.title}
+                </h3>
+
+                <p className="text-sm sm:text-base text-muted font-sans leading-relaxed max-w-3xl">
+                  {item.detail}
+                </p>
+
+                {item.tags && (
+                  <div className="flex flex-wrap gap-2 pt-2">
+                    {item.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="px-2.5 py-1 rounded-lg font-mono text-[11px] bg-white/[0.02] border border-white/[0.06] text-muted"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
 
-      {/* Certificate Modal Preview */}
-      <AnimatePresence>
-        {selectedCert && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-6"
-            onClick={() => setSelectedCert(null)}
-          >
+      {/* Certificate Modal Viewer */}
+      {selectedCert && (
+        <AnimatePresence>
+          <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 sm:p-6 bg-void/90 backdrop-blur-2xl">
+            <div
+              className="fixed inset-0"
+              onClick={() => setSelectedCert(null)}
+            />
             <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-              className="bg-obsidian border border-cyan/30 p-6 sm:p-8 rounded-3xl max-w-2xl w-full text-left space-y-6 relative shadow-[0_0_50px_rgba(0,240,255,0.3)] max-h-[90vh] overflow-y-auto"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="relative z-10 w-full max-w-3xl liquid-glass bg-void/95 border-white/[0.12] rounded-3xl p-6 sm:p-8 overflow-hidden shadow-2xl"
             >
-              <button
-                onClick={() => setSelectedCert(null)}
-                className="absolute top-6 right-6 p-2 rounded-full bg-white/5 border border-white/10 text-ash hover:text-white hover:border-cyan/40 transition-all z-10"
-              >
-                <X size={18} />
-              </button>
-
-              <div className="space-y-2 pr-8">
-                <span className="text-xs font-mono text-cyan uppercase tracking-widest block font-bold">
-                  OFFICIAL CERTIFICATE OF PARTICIPATION
-                </span>
-                <h3 className="text-2xl sm:text-3xl font-extrabold text-white">
-                  {selectedCert.title}
-                </h3>
-                <p className="text-xs font-mono text-ash">
-                  Date: {selectedCert.date} · Issued by {selectedCert.issuer}
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                {selectedCert.image && (
-                  <div className="rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-black">
-                    <img
-                      src={selectedCert.image}
-                      alt={selectedCert.title}
-                      className="w-full h-auto object-contain max-h-[420px]"
-                    />
-                  </div>
-                )}
-
-                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 space-y-3 font-poppins text-sm text-silver">
-                  <p>
-                    This certificate is proudly presented to <strong className="text-white">Yash Kumar</strong> in recognition of being among the select students who competed in <strong className="text-cyan">QuizOff 2026: India's Biggest AI Quiz</strong>, organized by <strong className="text-white">CampusCrew</strong> and hosted on <strong className="text-white">Unstop</strong>.
-                  </p>
-
-                  <div className="pt-2 border-t border-white/10 flex flex-wrap justify-between text-xs font-mono text-ash gap-2">
-                    <span>Participants: {selectedCert.stats}</span>
-                    <span>Founder: {selectedCert.founder}</span>
-                  </div>
+              <div className="flex items-center justify-between border-b border-white/[0.08] pb-4 mb-6">
+                <div>
+                  <h4 className="font-display font-bold text-xl text-paper">{selectedCert.title}</h4>
+                  <span className="font-mono text-xs text-cyan">{selectedCert.issuer}</span>
                 </div>
-              </div>
-
-              <div className="flex justify-end pt-2">
                 <button
                   onClick={() => setSelectedCert(null)}
-                  className="px-6 py-2.5 rounded-full bg-cyan text-black font-mono text-xs font-semibold hover:bg-cyan-bright transition-all"
+                  className="p-2 rounded-full bg-white/[0.04] border border-white/[0.08] text-muted hover:text-paper"
                 >
-                  CLOSE PREVIEW
+                  <X size={18} />
                 </button>
               </div>
+
+              <div className="rounded-xl overflow-hidden bg-black/60 border border-white/[0.08] mb-4 aspect-[4/3] flex items-center justify-center">
+                <img
+                  src={selectedCert.image}
+                  alt={selectedCert.title}
+                  className="max-h-full max-w-full object-contain"
+                  onError={(e) => {
+                    e.target.style.display = 'none'
+                  }}
+                />
+              </div>
+
+              <div className="text-center font-mono text-xs text-muted">
+                {selectedCert.stats}
+              </div>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+        </AnimatePresence>
+      )}
     </section>
   )
 }

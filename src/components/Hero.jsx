@@ -1,139 +1,153 @@
 import { motion } from 'framer-motion'
-import { ArrowUpRight, ArrowDown } from 'lucide-react'
-import { profile } from '../data/portfolioData'
+import { ArrowDown, ArrowUpRight, Download, Terminal, Layers, Sparkles } from 'lucide-react'
+import { profile, stats } from '../data/portfolioData'
+import DigitalSystemCore from './three/DigitalSystemCore'
+import { scrollToTarget } from '../utils/smoothScroll'
 
-const DUST_PARTICLES = [
-  { top: '12%', left: '8%', size: '2.1px', color: 'rgba(252,107,47,0.6)', delay: '0s' },
-  { top: '25%', left: '82%', size: '1.5px', color: 'rgba(255,255,255,0.25)', delay: '0.6s' },
-  { top: '40%', left: '15%', size: '2.8px', color: 'rgba(255,255,255,0.25)', delay: '1.2s' },
-  { top: '58%', left: '91%', size: '1.2px', color: 'rgba(252,107,47,0.6)', delay: '1.8s' },
-  { top: '72%', left: '24%', size: '2.4px', color: 'rgba(255,255,255,0.25)', delay: '2.4s' },
-  { top: '18%', left: '64%', size: '1.8px', color: 'rgba(255,255,255,0.25)', delay: '3.0s' },
-  { top: '84%', left: '45%', size: '2.6px', color: 'rgba(252,107,47,0.6)', delay: '3.6s' },
-  { top: '33%', left: '37%', size: '1.4px', color: 'rgba(255,255,255,0.25)', delay: '4.2s' },
-]
+export default function Hero() {
+  const handleScrollToProjects = () => {
+    scrollToTarget('#projects', -60)
+  }
 
-export default function Hero({ onNavigate }) {
   return (
     <section
       id="hero"
-      className="relative min-h-screen w-full bg-void flex flex-col justify-between py-24 px-6 md:px-14 lg:px-20 overflow-hidden font-poppins"
+      className="relative min-h-screen flex flex-col justify-between pt-28 pb-12 px-6 sm:px-10 lg:px-16 overflow-hidden arch-grid"
     >
-      {/* Background Radial Glow Spotlight */}
-      <div
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[340px] h-[340px] sm:w-[600px] sm:h-[600px] md:w-[850px] md:h-[850px] pointer-events-none z-[6]"
-        style={{
-          background: 'radial-gradient(circle, rgba(0,240,255,0.18) 0%, rgba(0,240,255,0.03) 45%, transparent 70%)',
-          filter: 'blur(60px)',
-        }}
-        aria-hidden="true"
-      />
-
-      {/* Floating Ambient Dust Particles */}
-      <div className="absolute inset-0 pointer-events-none z-[8]" aria-hidden="true">
-        {DUST_PARTICLES.map((p, i) => (
-          <div
-            key={i}
-            className="absolute rounded-full animate-float"
-            style={{
-              width: p.size,
-              height: p.size,
-              background: i % 2 === 0 ? 'rgba(0,240,255,0.75)' : 'rgba(255,255,255,0.3)',
-              top: p.top,
-              left: p.left,
-              animationDelay: p.delay,
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Top Left Tagline & SIH Finalist Badge */}
-      <motion.div
-        initial={{ opacity: 0, y: 15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.1 }}
-        className="z-[40] flex flex-wrap items-center gap-3 pt-4 sm:pt-0"
-      >
-        <div className="flex items-center gap-2 px-3 py-1 rounded-full border border-cyan/40 bg-cyan/10 text-cyan text-[10px] sm:text-[11px] font-mono font-bold tracking-wider uppercase shadow-[0_0_15px_rgba(0,240,255,0.25)]">
-          <span className="w-[7px] h-[7px] rounded-full bg-cyan animate-pulse shadow-[0_0_12px_#00f0ff]" />
-          <span>SIH 2025 NATIONAL FINALIST</span>
+      {/* Top Editorial Anchor & Micro Data */}
+      <div className="max-w-7xl mx-auto w-full pt-4 flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.06] pb-4 z-10 font-mono text-[11px]">
+        <div className="flex items-center gap-3 text-muted tracking-wider">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan opacity-75" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan" />
+          </span>
+          <span className="text-paper font-medium">AVAILABLE FOR OPPORTUNITIES</span>
+          <span className="text-white/20 hidden sm:inline">|</span>
+          <span className="text-muted hidden sm:inline">FULL-TIME &amp; CONTRACT</span>
         </div>
-        <span className="text-[11px] text-ash tracking-[0.2em] uppercase font-medium font-display">
-          · Shipping Ideas Into Reality.
-        </span>
-      </motion.div>
 
-      {/* Giant Center Title & Subtext */}
-      <div className="my-auto py-12 z-[15] select-none w-full flex flex-col items-center justify-center text-center">
-        <motion.h1
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="font-display font-black text-4xl xs:text-5xl sm:text-7xl md:text-9xl xl:text-[11rem] tracking-tighter text-white uppercase text-center leading-[0.95] sm:leading-none drop-shadow-[0_0_45px_rgba(0,240,255,0.35)]"
-        >
-          YASH KUMAR
-        </motion.h1>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-4 md:mt-6 text-center"
-        >
-          <p className="text-[11px] sm:text-[14px] md:text-base font-extrabold tracking-[0.2em] sm:tracking-[0.25em] uppercase text-cyan drop-shadow-[0_0_20px_rgba(0,240,255,0.7)] font-poppins">
-            Crafting Interfaces That People Remember.
-          </p>
-        </motion.div>
+        <div className="flex items-center gap-4 text-muted tracking-widest uppercase">
+          <span>ABESIT · CSE</span>
+          <span className="text-white/20">•</span>
+          <span className="text-cyan font-semibold">SIH 2025 NATIONAL FINALIST</span>
+        </div>
       </div>
 
-      {/* Bottom Row: Left Subtext & Right CTAs */}
-      <div className="z-[40] flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6 pb-4 sm:pb-0">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="max-w-[340px] sm:max-w-[380px] lg:max-w-[440px]"
-        >
-          <p className="text-[12px] sm:text-[13px] md:text-[14px] text-silver leading-[1.7] font-normal tracking-wide font-poppins">
-            Full-Stack Developer &amp; Applied AI Builder engineering fast, immersive, and motion-driven digital products.
-          </p>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          className="flex flex-col sm:flex-row sm:items-center gap-3 w-full sm:w-auto"
-        >
-          <button
-            onClick={() => onNavigate('projects')}
-            className="group w-full sm:w-auto inline-flex items-center justify-center gap-3 px-7 py-3.5 rounded-full font-medium text-[13px] tracking-wide bg-cyan text-black font-semibold hover:bg-cyan-bright transition-all duration-300 shadow-[0_0_25px_rgba(0,240,255,0.45)] hover:shadow-[0_0_35px_rgba(0,240,255,0.7)]"
+      {/* Main Grid: Editorial Typography (Left) + Digital System Core (Right) */}
+      <div className="max-w-7xl mx-auto w-full my-auto py-10 lg:py-16 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-6 items-center z-10">
+        {/* Left Column: Architectural Editorial Statement */}
+        <div className="lg:col-span-7 flex flex-col justify-center space-y-8">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
-            <span className="w-6 h-6 rounded-full border border-black/30 flex items-center justify-center transition-transform duration-500 group-hover:rotate-45">
-              <ArrowUpRight size={13} />
-            </span>
-            <span>Explore Work →</span>
-          </button>
+            {/* Editorial Header Tag */}
+            <div className="inline-flex items-center gap-2.5 px-3.5 py-1 rounded-full bg-white/[0.03] border border-white/[0.08] text-[11px] font-mono text-cyan mb-6">
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan" />
+              <span>YASH KUMAR // APPLIED AI &amp; SYSTEMS ARCHITECT</span>
+            </div>
 
-          <button
-            onClick={() => onNavigate('contact')}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-medium text-[12px] tracking-wide bg-transparent text-white border border-white/15 hover:border-cyan/50 hover:text-cyan transition-colors duration-300"
+            {/* Oversized Architectural Typography */}
+            <h1 className="font-display text-5xl sm:text-7xl xl:text-8xl font-black tracking-tighter text-paper uppercase leading-[0.92]">
+              BUILDING<br />
+              DIGITAL<br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-paper via-white to-cyan">
+                SYSTEMS.
+              </span>
+            </h1>
+
+            <div className="mt-6 flex items-center gap-3">
+              <span className="w-10 h-[1px] bg-cyan/60 inline-block" />
+              <h2 className="font-mono text-xs sm:text-sm tracking-[0.25em] text-cyan uppercase font-semibold">
+                FULL STACK / APPLIED AI ENGINEER
+              </h2>
+            </div>
+
+            <p className="mt-5 text-base sm:text-lg text-muted max-w-xl font-sans leading-relaxed tracking-tight">
+              Engineering high-concurrency applications, real-time collaboration engines, and multi-agent AI workflows that scale to production.
+            </p>
+          </motion.div>
+
+          {/* Action CTAs */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="flex flex-wrap items-center gap-4 pt-2"
           >
-            <span>Let's Talk</span>
-          </button>
-        </motion.div>
+            <button
+              onClick={handleScrollToProjects}
+              data-cursor="cta"
+              className="group inline-flex items-center gap-3 px-8 py-4 rounded-full font-mono text-xs font-semibold tracking-wider bg-paper text-void hover:bg-cyan transition-all duration-300 shadow-[0_0_30px_rgba(245,243,238,0.15)] hover:shadow-[0_0_35px_rgba(0,240,255,0.45)]"
+            >
+              <span>EXPLORE WORK</span>
+              <ArrowDown size={14} className="group-hover:translate-y-1 transition-transform duration-300" />
+            </button>
+
+            <a
+              href={profile.resumeUrl}
+              download
+              className="inline-flex items-center gap-2.5 px-7 py-4 rounded-full font-mono text-xs font-medium tracking-wider text-paper bg-white/[0.04] border border-white/[0.12] hover:border-cyan/50 hover:text-cyan transition-all duration-300"
+            >
+              <Download size={14} />
+              <span>DOWNLOAD RESUME</span>
+            </a>
+          </motion.div>
+
+          {/* Technical Metadata Matrix */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 0.4 }}
+            className="pt-6 grid grid-cols-3 gap-6 border-t border-white/[0.06] max-w-lg text-left font-mono"
+          >
+            <div>
+              <div className="font-display text-2xl sm:text-3xl font-bold text-paper">SIH '25</div>
+              <div className="text-[10px] text-muted uppercase tracking-wider mt-1">National Finalist</div>
+            </div>
+            <div>
+              <div className="font-display text-2xl sm:text-3xl font-bold text-paper">5+</div>
+              <div className="text-[10px] text-muted uppercase tracking-wider mt-1">Production Systems</div>
+            </div>
+            <div>
+              <div className="font-display text-2xl sm:text-3xl font-bold text-cyan">&lt; 45ms</div>
+              <div className="text-[10px] text-muted uppercase tracking-wider mt-1">CRDT Sync Latency</div>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Right Column: 3D Digital System Core with Ambient Floating Labels */}
+        <div className="lg:col-span-5 relative flex items-center justify-center">
+          <DigitalSystemCore />
+
+          {/* Floating HUD Micro Labels */}
+          <div className="absolute top-2 right-2 sm:right-6 pointer-events-none font-mono text-[10px] text-muted tracking-wider p-3 rounded-2xl liquid-glass border-white/[0.08] z-20">
+            <div className="text-paper font-semibold flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan animate-pulse" />
+              DIGITAL CORE // RUNNING
+            </div>
+            <div className="text-[9px] text-muted mt-0.5">AVAILABILITY: 99.98%</div>
+          </div>
+
+          <div className="absolute bottom-4 left-2 sm:left-4 pointer-events-none font-mono text-[10px] text-muted tracking-wider p-3 rounded-2xl liquid-glass border-white/[0.08] z-20">
+            <div className="text-paper font-semibold">STACK ORCHESTRATION</div>
+            <div className="text-[9px] text-cyan mt-0.5">REACT 19 · YJS · FASTAPI</div>
+          </div>
+        </div>
       </div>
 
-      {/* Scroll-down Line Visualizer */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 0.8 }}
-        className="hidden md:flex absolute bottom-8 left-1/2 -translate-x-1/2 z-[40] flex-col items-center gap-2"
-      >
-        <span className="text-[10px] font-mono text-ash uppercase tracking-widest">SCROLL</span>
-        <div className="w-[1px] h-8 bg-gradient-to-b from-cyan to-transparent animate-pulse" />
-      </motion.div>
+      {/* Bottom Architectural Bar */}
+      <div className="max-w-7xl mx-auto w-full flex items-center justify-between text-[11px] font-mono text-muted tracking-widest uppercase border-t border-white/[0.06] pt-4 z-10">
+        <div className="flex items-center gap-2">
+          <Layers size={13} className="text-cyan" />
+          <span>TECHNOLOGY LABORATORY // 2026</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span>SCROLL DOWN</span>
+          <span className="w-6 h-[1px] bg-muted inline-block" />
+        </div>
+      </div>
     </section>
   )
 }

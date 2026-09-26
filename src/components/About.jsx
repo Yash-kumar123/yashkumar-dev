@@ -1,120 +1,139 @@
-import { useRef } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
-import { Terminal } from 'lucide-react'
-import { profile, skillCategories } from '../data/portfolioData'
+import { motion } from 'framer-motion'
+import { Terminal, Shield, Award, Cpu, Code2, Globe, ArrowUpRight } from 'lucide-react'
+import { profile, about, education, stats } from '../data/portfolioData'
+
+const JOURNEY_STEPS = [
+  {
+    year: '2026',
+    title: 'DevSync AI & Enterprise Systems',
+    desc: 'Architected real-time multiplayer IDE using Yjs CRDTs and 3-agent AI orchestration. Shipped multi-tenant RBAC platform.',
+  },
+  {
+    year: '2025',
+    title: 'SIH National Finals & Cognitive Audio',
+    desc: 'Reached national finals in Smart India Hackathon (500+ teams). Engineered sub-2s speech feature extraction backend for dementia detection.',
+  },
+  {
+    year: '2024',
+    title: 'Distributed Platforms & MERN Ecosystem',
+    desc: 'Constructed Rent-Vortex with Leaflet geospatial booking and multi-role marketplace workflows under tight hackathon sprints.',
+  },
+  {
+    year: '2023',
+    title: 'Engineering Genesis at ABESIT',
+    desc: 'B.Tech in Computer Science & Engineering. Deep dive into algorithms, systems programming, and full-stack engineering.',
+  },
+]
 
 export default function About() {
-  const containerRef = useRef(null)
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start end', 'end start'],
-  })
-
-  // Jishnu Mondal scroll expand transforms
-  const scale = useTransform(scrollYProgress, [0, 0.4], [0.88, 1])
-  const opacity = useTransform(scrollYProgress, [0, 0.3], [0.3, 1])
-  const glowScale = useTransform(scrollYProgress, [0, 0.5], [0.7, 1.2])
-
   return (
-    <section
-      ref={containerRef}
-      id="philosophy"
-      className="relative min-h-screen flex flex-col justify-center py-28 px-6 md:px-12 bg-void overflow-hidden border-t border-white/5"
-    >
-      {/* Scroll-Driven Dark Atmospheric Background Glow */}
-      <motion.div
-        style={{
-          scale: glowScale,
-          background: 'radial-gradient(ellipse, rgba(0,240,255,0.14) 0%, transparent 70%)',
-          filter: 'blur(110px)',
-        }}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[750px] h-[500px] pointer-events-none z-0"
-        aria-hidden="true"
-      />
-
-      <motion.div style={{ scale, opacity }} className="relative z-10 max-w-5xl mx-auto w-full">
-        {/* Section Header Tag */}
-        <div className="text-center mb-10">
-          <span className="text-cyan text-xs font-semibold tracking-[0.35em] uppercase font-josefin">
-            The Philosophy
-          </span>
+    <section id="about" className="relative py-28 sm:py-36 px-6 sm:px-10 lg:px-16 border-t border-white/[0.07] bg-void arch-dots">
+      <div className="max-w-7xl mx-auto">
+        {/* Section Header Label */}
+        <div className="flex items-center gap-3 font-mono text-xs text-cyan tracking-[0.25em] uppercase mb-14">
+          <span className="text-paper font-bold">01</span>
+          <span className="w-8 h-[1px] bg-cyan/50" />
+          <span>WHO I AM // EDITORIAL NARRATIVE</span>
         </div>
 
-        {/* Large Centered Josefin Sans Quote Statement & Portrait Card */}
-        <div className="grid md:grid-cols-12 gap-10 items-center max-w-5xl mx-auto">
-          {/* Formal Portrait Photo Frame */}
-          <div className="md:col-span-4 flex justify-center">
-            <motion.div
-              whileHover={{ scale: 1.03 }}
-              transition={{ duration: 0.4 }}
-              className="relative group w-64 h-80 sm:w-72 sm:h-96 rounded-3xl overflow-hidden bg-[#0d0d0d] border border-cyan/40 p-2.5 shadow-[0_0_35px_rgba(0,240,255,0.25)] transition-all duration-500 hover:border-cyan hover:shadow-[0_0_50px_rgba(0,240,255,0.45)]"
-            >
-              <div className="w-full h-full rounded-2xl overflow-hidden relative bg-[#050505]">
-                <img
-                  src={profile.photo}
-                  alt={profile.name}
-                  className="w-full h-full object-cover object-top filter contrast-[1.05] brightness-[0.98] group-hover:scale-105 transition-transform duration-700 ease-out"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent pointer-events-none" />
-                <div className="absolute bottom-4 left-4 right-4 text-center z-10">
-                  <span className="text-xs font-mono font-bold text-white uppercase tracking-wider block">YASH KUMAR</span>
-                  <span className="text-[10px] font-mono text-cyan block">{profile.badge}</span>
+        {/* Top Grid: Statement & Portrait */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start mb-20">
+          {/* Left Column: Huge Architectural Statement */}
+          <div className="lg:col-span-7 space-y-8">
+            <h2 className="font-display text-5xl sm:text-7xl font-black tracking-tighter text-paper uppercase leading-[0.92]">
+              I BUILD<br />
+              SYSTEMS<br />
+              <span className="text-cyan">THAT WORK.</span>
+            </h2>
+
+            <p className="text-lg sm:text-xl text-muted font-sans leading-relaxed tracking-tight">
+              I am a Computer Science engineer at ABESIT who would rather ship real, resilient software that solves bottlenecks than complete another sandbox tutorial.
+            </p>
+
+            <div className="space-y-4 text-sm sm:text-base text-muted/90 font-sans leading-relaxed">
+              <p>
+                Over the past two years, I have architected and deployed production-grade applications: a real-time collaborative cloud IDE powered by Yjs CRDTs and a 3-agent AI orchestration pipeline; an acoustic biomarker extraction engine processing speech in under two seconds to identify early signs of cognitive decline; and an enterprise multi-tenant review system enforcing row-level PostgreSQL security across arbitrary corporate hierarchies.
+              </p>
+              <p>
+                In 2025, my team reached the national finals of the <strong>Smart India Hackathon (SIH)</strong>, beating out hundreds of collegiate engineering teams nationwide. My focus is centered on distributed architectures, applied AI (RAG, agent workflows, vector search), and engineering interactive user experiences with zero compromise on latency.
+              </p>
+            </div>
+          </div>
+
+          {/* Right Column: Formal Portrait Frame with HUD Metadata */}
+          <div className="lg:col-span-5 space-y-6">
+            <div className="relative group max-w-sm mx-auto lg:mx-0">
+              <div className="p-2.5 rounded-3xl liquid-glass border-white/[0.08] relative overflow-hidden group-hover:border-cyan/40 transition-colors duration-500 shadow-2xl">
+                <div className="relative rounded-2xl overflow-hidden bg-surface aspect-[4/5] max-h-[460px]">
+                  <img
+                    src={profile.photo}
+                    alt={profile.name}
+                    className="w-full h-full object-cover object-top filter grayscale contrast-125 brightness-95 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
+                  />
+                  {/* Vignette */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-void via-transparent to-transparent opacity-80" />
+
+                  {/* Micro Metadata Overlay */}
+                  <div className="absolute bottom-4 left-4 right-4 p-3.5 rounded-xl liquid-glass bg-void/85 border-white/[0.1] font-mono text-[10px] space-y-1">
+                    <div className="flex justify-between items-center text-paper font-semibold">
+                      <span>{profile.name.toUpperCase()}</span>
+                      <span className="text-cyan">CSE '27</span>
+                    </div>
+                    <div className="text-muted flex justify-between">
+                      <span>{education.school.split('(')[0]}</span>
+                      <span>{profile.location.split(',')[0]}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </motion.div>
-          </div>
 
-          {/* Statement text */}
-          <div className="md:col-span-8 space-y-6 text-left">
-            <p className="text-xl sm:text-2xl md:text-3xl font-medium text-white leading-[1.45] tracking-tight font-josefin">
-              I believe great software is born at the intersection of engineering precision and design intuition. Every pixel, every API endpoint, every line of code is an opportunity to create something that actually ships and moves people.
-            </p>
+              {/* Technical Precision Corner Brackets */}
+              <div className="absolute -top-1.5 -left-1.5 w-3.5 h-3.5 border-t-2 border-l-2 border-cyan/70 pointer-events-none" />
+              <div className="absolute -bottom-1.5 -right-1.5 w-3.5 h-3.5 border-b-2 border-r-2 border-cyan/70 pointer-events-none" />
+            </div>
 
-            <p className="text-[#B5B5B5] text-sm md:text-base leading-relaxed font-poppins">
-              Final-year CS student engineering production-ready applications — from real-time collaborative AI code editors to speech feature extraction backends flagging early dementia.
-            </p>
+            {/* Quick Badges */}
+            <div className="grid grid-cols-2 gap-3 max-w-sm mx-auto lg:mx-0 font-mono text-xs">
+              <div className="p-4 rounded-2xl liquid-glass border-white/[0.06]">
+                <div className="text-muted text-[10px] uppercase tracking-wider mb-1">EDUCATION</div>
+                <div className="text-paper font-medium">{education.degree}</div>
+                <div className="text-muted text-[10px] mt-0.5">{education.years}</div>
+              </div>
+              <div className="p-4 rounded-2xl liquid-glass border-white/[0.06]">
+                <div className="text-muted text-[10px] uppercase tracking-wider mb-1">NATIONAL BENCHMARK</div>
+                <div className="text-cyan font-semibold">SIH '25 Finalist</div>
+                <div className="text-muted text-[10px] mt-0.5">Top 500+ National Teams</div>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Sleek Glass Card Tech Stack Matrix */}
-        <div className="mt-20 pt-12 border-t border-white/10">
-          <div className="flex items-center gap-2 mb-8">
-            <span className="w-8 h-[2px] bg-ember inline-block rounded-full" />
-            <span className="text-ember text-xs font-bold tracking-[0.25em] uppercase font-poppins flex items-center gap-2">
-              <Terminal size={14} />
-              Core Tech Stack &amp; Ecosystem
+        {/* Bottom: Engineering Journey Timeline */}
+        <div className="border-t border-white/[0.08] pt-14">
+          <div className="flex items-center justify-between mb-8">
+            <span className="font-mono text-xs text-muted tracking-widest uppercase">
+              Engineering Progression Timeline
             </span>
+            <span className="font-mono text-[10px] text-cyan">2023 — 2026</span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {skillCategories.map((cat, i) => (
-              <motion.div
-                key={cat.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: i * 0.08 }}
-                className="glass-card p-6 transition-all duration-300 hover:border-ember/40 group"
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {JOURNEY_STEPS.map((step) => (
+              <div
+                key={step.year}
+                className="p-6 rounded-2xl liquid-glass border-white/[0.06] hover:border-white/[0.15] transition-all space-y-3 relative group"
               >
-                <div className="font-display font-bold text-sm tracking-wider text-white uppercase mb-4 flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-ember group-hover:scale-125 transition-transform" />
-                  {cat.name}
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-lg font-bold text-cyan">{step.year}</span>
+                  <span className="w-2 h-2 rounded-full bg-white/[0.2] group-hover:bg-cyan transition-colors" />
                 </div>
-                <div className="flex flex-wrap gap-2">
-                  {cat.skills.map((s) => (
-                    <span
-                      key={s}
-                      className="text-xs font-mono px-3 py-1.5 rounded-lg border border-white/10 bg-white/5 text-[#B5B5B5] group-hover:text-white group-hover:border-ember/30 transition-all duration-200"
-                    >
-                      {s}
-                    </span>
-                  ))}
-                </div>
-              </motion.div>
+                <h4 className="font-display font-bold text-sm text-paper">{step.title}</h4>
+                <p className="font-sans text-xs text-muted leading-relaxed">{step.desc}</p>
+              </div>
             ))}
           </div>
         </div>
-      </motion.div>
+      </div>
     </section>
   )
 }

@@ -1,195 +1,193 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Mail, MapPin, Send, ArrowUpRight, Github, Linkedin, Twitter, Instagram } from 'lucide-react'
+import { ArrowUpRight, Copy, Check, Mail, Phone, Github, Linkedin, Send, Sparkles } from 'lucide-react'
 import { profile } from '../data/portfolioData'
 
 export default function Contact() {
+  const [copied, setCopied] = useState(false)
   const [form, setForm] = useState({ name: '', email: '', message: '' })
 
-  const handleChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }))
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText(profile.email)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    const body = `From: ${form.name} (${form.email})%0D%0A%0D%0A${encodeURIComponent(form.message)}`
-    const subject = encodeURIComponent(`Portfolio Inquiry from ${form.name}`)
+    const subject = encodeURIComponent(`Engineering Inquiry from ${form.name || 'Collaborator'}`)
+    const body = encodeURIComponent(
+      `Hi Yash,\n\n${form.message}\n\nFrom: ${form.name} (${form.email})`
+    )
     window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`
   }
 
   return (
-    <section id="contact" className="relative py-32 md:py-48 bg-void border-t border-white/5 font-poppins">
-      {/* Bottom Subtle Glow */}
+    <section id="contact" className="relative py-28 sm:py-40 px-6 sm:px-10 lg:px-16 border-t border-white/[0.07] bg-surface arch-grid overflow-hidden">
+      {/* Deep Atmospheric Backdrop Glow */}
       <div
-        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] pointer-events-none z-0"
-        style={{
-          background: 'radial-gradient(ellipse, rgba(252,107,47,0.12) 0%, transparent 70%)',
-          filter: 'blur(80px)',
-        }}
+        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-t from-cyan/15 via-violet/10 to-transparent rounded-full blur-[150px] pointer-events-none"
         aria-hidden="true"
       />
 
-      <div className="max-w-6xl mx-auto px-6 md:px-12 relative z-10">
-        {/* Section Header */}
-        <div className="mb-16 md:mb-24 text-center">
-          <span className="text-ember text-xs font-semibold tracking-[0.25em] uppercase block mb-4">
-            Get in Touch
-          </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-[1.15] tracking-tight">
-            Let's Create Something Extraordinary
-          </h2>
-          <p className="mt-4 md:mt-6 text-base md:text-lg text-ash max-w-xl mx-auto leading-relaxed font-normal">
-            Have a project or opportunity in mind? I'd love to hear about it. Let's build something amazing together.
-          </p>
+      <div className="max-w-7xl mx-auto relative z-10">
+        {/* Section Tag */}
+        <div className="flex items-center gap-3 font-mono text-xs text-cyan tracking-[0.25em] uppercase mb-14">
+          <span className="text-paper font-bold">04</span>
+          <span className="w-8 h-[1px] bg-cyan/50" />
+          <span>FINAL SCENE // GET IN TOUCH</span>
         </div>
 
-        <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-8 md:gap-12">
-          {/* Left: Contact Details Glass Card */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="glass-card p-8 md:p-10 flex flex-col justify-between"
-          >
+        {/* Massive Editorial Headline & Contact Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+          {/* Left Column: Final Scene Typography & Fast Links (7 Columns) */}
+          <div className="lg:col-span-7 space-y-10">
             <div>
-              <h3 className="text-xl font-bold text-white mb-6">Contact Details</h3>
-
-              <div className="space-y-6">
-                {/* Email */}
-                <div className="flex items-start gap-4">
-                  <span className="w-8 h-8 rounded-full bg-cyan/10 border border-cyan/20 flex items-center justify-center text-cyan mt-0.5 shrink-0">
-                    <Mail size={16} />
-                  </span>
-                  <div>
-                    <p className="text-xs text-ash uppercase tracking-wider mb-1 font-semibold">Email</p>
-                    <a
-                      href={`mailto:${profile.email}`}
-                      className="text-sm text-white hover:text-cyan transition-colors font-medium"
-                    >
-                      {profile.email}
-                    </a>
-                  </div>
-                </div>
-
-                {/* Location */}
-                <div className="flex items-start gap-4">
-                  <span className="w-8 h-8 rounded-full bg-cyan/10 border border-cyan/20 flex items-center justify-center text-cyan mt-0.5 shrink-0">
-                    <MapPin size={16} />
-                  </span>
-                  <div>
-                    <p className="text-xs text-ash uppercase tracking-wider mb-1 font-semibold">Location</p>
-                    <p className="text-sm text-white font-medium">{profile.location}</p>
-                  </div>
-                </div>
-
-                {/* Availability Badge */}
-                <div className="flex items-start gap-4">
-                  <span className="w-8 h-8 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 mt-0.5 shrink-0 relative">
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
-                    <span className="absolute inset-1 rounded-full border border-emerald-400/50 animate-ping" />
-                  </span>
-                  <div>
-                    <p className="text-xs text-ash uppercase tracking-wider mb-1 font-semibold">Availability</p>
-                    <p className="text-sm text-green-400 font-medium">Open for roles &amp; internships</p>
-                  </div>
-                </div>
-              </div>
+              <h2 className="font-display text-5xl sm:text-7xl xl:text-8xl font-black tracking-tighter text-paper uppercase leading-[0.92]">
+                LET'S<br />
+                BUILD<br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-paper via-white to-cyan">
+                  SOMETHING.
+                </span>
+              </h2>
+              <p className="mt-6 text-base sm:text-lg text-muted max-w-lg font-sans leading-relaxed">
+                Currently open for full-time software engineering roles, high-impact internships, and selective contract opportunities.
+              </p>
             </div>
 
-            {/* Social Icons */}
-            <div className="mt-10 pt-6 border-t border-white/5">
-              <p className="text-xs text-ash uppercase tracking-wider mb-4 font-semibold">Socials</p>
-              <div className="flex gap-3">
+            {/* Direct One-Click Copy & Quick Actions */}
+            <div className="space-y-4 pt-2">
+              <div className="flex flex-wrap items-center gap-3">
                 <a
-                  href={`https://${profile.github}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:border-cyan/40 hover:bg-white/10 transition-all group text-ash hover:text-white"
-                  title="GitHub"
+                  href={`mailto:${profile.email}`}
+                  data-cursor="cta"
+                  className="group inline-flex items-center gap-3 px-7 py-4 rounded-full font-mono text-xs font-semibold tracking-wider bg-paper text-void hover:bg-cyan transition-all duration-300 shadow-[0_0_30px_rgba(245,243,238,0.15)] hover:shadow-[0_0_35px_rgba(0,240,255,0.45)]"
                 >
-                  <Github size={16} />
+                  <Mail size={14} />
+                  <span>{profile.email}</span>
+                  <ArrowUpRight size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </a>
+
+                <button
+                  onClick={handleCopyEmail}
+                  className="inline-flex items-center gap-2 px-5 py-4 rounded-full font-mono text-xs text-muted bg-white/[0.04] border border-white/[0.1] hover:text-paper hover:border-cyan/40 transition-all"
+                  aria-label="Copy Email"
+                >
+                  {copied ? <Check size={14} className="text-cyan" /> : <Copy size={14} />}
+                  <span>{copied ? 'COPIED' : 'COPY'}</span>
+                </button>
+              </div>
+
+              {/* Social Channels */}
+              <div className="flex items-center gap-6 pt-3 font-mono text-xs text-muted">
                 <a
-                  href={`https://${profile.linkedin}`}
+                  href={profile.github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:border-cyan/40 hover:bg-white/10 transition-all group text-ash hover:text-white"
-                  title="LinkedIn"
+                  className="flex items-center gap-1.5 hover:text-cyan transition-colors"
                 >
-                  <Linkedin size={16} />
+                  <Github size={14} />
+                  <span>GitHub ↗</span>
+                </a>
+                <span className="text-white/20">•</span>
+                <a
+                  href={profile.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 hover:text-cyan transition-colors"
+                >
+                  <Linkedin size={14} />
+                  <span>LinkedIn ↗</span>
+                </a>
+                <span className="text-white/20">•</span>
+                <a
+                  href={`tel:${profile.phone}`}
+                  className="flex items-center gap-1.5 hover:text-cyan transition-colors"
+                >
+                  <Phone size={14} />
+                  <span>{profile.phone}</span>
                 </a>
               </div>
             </div>
-          </motion.div>
 
-          {/* Right: Contact Form Glass Card */}
-          <motion.form
-            onSubmit={handleSubmit}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="glass-card p-8 md:p-10 space-y-6"
-          >
-            <div>
-              <label htmlFor="contact-name" className="text-xs text-ash uppercase tracking-wider block mb-2 font-semibold">
-                Name
-              </label>
-              <input
-                id="contact-name"
-                type="text"
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-muted focus:outline-none focus:border-cyan/50 focus:ring-1 focus:ring-cyan/50 transition-colors"
-                placeholder="Your name"
-                required
-              />
+            {/* Live Availability Status Badge */}
+            <div className="p-4 rounded-2xl liquid-glass border-white/[0.08] flex items-center gap-3.5 max-w-md">
+              <span className="relative flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan opacity-75" />
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-cyan" />
+              </span>
+              <div className="font-mono text-xs">
+                <span className="text-paper font-semibold block">SYSTEM STATUS: AVAILABLE</span>
+                <span className="text-muted text-[11px]">Ready to deploy production systems immediately.</span>
+              </div>
             </div>
+          </div>
 
-            <div>
-              <label htmlFor="contact-email" className="text-xs text-ash uppercase tracking-wider block mb-2 font-semibold">
-                Email
-              </label>
-              <input
-                id="contact-email"
-                type="email"
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-muted focus:outline-none focus:border-cyan/50 focus:ring-1 focus:ring-cyan/50 transition-colors"
-                placeholder="your@email.com"
-                required
-              />
+          {/* Right Column: Direct Mail Composer (5 Columns) */}
+          <div className="lg:col-span-5">
+            <div className="liquid-glass p-6 sm:p-8 rounded-3xl border-white/[0.08]">
+              <div className="flex items-center justify-between border-b border-white/[0.08] pb-4 mb-6 font-mono text-xs">
+                <span className="text-paper font-semibold flex items-center gap-2">
+                  <Send size={13} className="text-cyan" />
+                  <span>DIRECT DISPATCH</span>
+                </span>
+                <span className="text-muted text-[10px]">CLIENT-SIDE MAILTO</span>
+              </div>
+
+              <form onSubmit={handleSubmit} className="space-y-4 font-sans text-xs">
+                <div>
+                  <label className="block font-mono text-[10px] text-muted uppercase tracking-wider mb-1.5">
+                    YOUR NAME
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={form.name}
+                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                    placeholder="Alex Morgan"
+                    className="w-full px-4 py-3 rounded-xl bg-void/80 border border-white/[0.08] text-paper focus:outline-none focus:border-cyan/50 transition-colors font-mono"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-mono text-[10px] text-muted uppercase tracking-wider mb-1.5">
+                    EMAIL ADDRESS
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    value={form.email}
+                    onChange={(e) => setForm({ ...form, email: e.target.value })}
+                    placeholder="alex@company.com"
+                    className="w-full px-4 py-3 rounded-xl bg-void/80 border border-white/[0.08] text-paper focus:outline-none focus:border-cyan/50 transition-colors font-mono"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-mono text-[10px] text-muted uppercase tracking-wider mb-1.5">
+                    PROJECT SCOPE OR INQUIRY
+                  </label>
+                  <textarea
+                    rows={4}
+                    required
+                    value={form.message}
+                    onChange={(e) => setForm({ ...form, message: e.target.value })}
+                    placeholder="We have an engineering opportunity or project we'd like you to architect..."
+                    className="w-full px-4 py-3 rounded-xl bg-void/80 border border-white/[0.08] text-paper focus:outline-none focus:border-cyan/50 transition-colors font-sans resize-none text-xs"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  data-cursor="cta"
+                  className="w-full py-3.5 rounded-xl bg-white/[0.06] border border-white/[0.12] hover:border-cyan/50 hover:bg-cyan hover:text-void font-mono font-semibold text-xs text-paper transition-all duration-300 flex items-center justify-center gap-2"
+                >
+                  <Send size={13} />
+                  <span>TRANSMIT MESSAGE →</span>
+                </button>
+              </form>
             </div>
-
-            <div>
-              <label htmlFor="contact-message" className="text-xs text-ash uppercase tracking-wider block mb-2 font-semibold">
-                Message
-              </label>
-              <textarea
-                id="contact-message"
-                rows={5}
-                name="message"
-                value={form.message}
-                onChange={handleChange}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-muted focus:outline-none focus:border-cyan/50 focus:ring-1 focus:ring-cyan/50 transition-colors resize-none"
-                placeholder="Tell me about your project or opportunity..."
-                required
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="w-full inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full font-medium text-sm tracking-wide bg-cyan text-black hover:bg-cyan/90 shadow-[0_0_25px_rgba(0,240,255,0.3)] transition-all duration-300 group"
-            >
-              <span>Send Message</span>
-              <Send size={15} className="transition-transform duration-300 group-hover:translate-x-1" />
-            </button>
-          </motion.form>
-        </div>
-
-        {/* Footer line */}
-        <div className="mt-32 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between text-xs text-ash font-poppins gap-4">
-          <p>© {new Date().getFullYear()} {profile.name}. Crafted with passion &amp; engineering precision.</p>
-          <p className="font-mono text-ember text-[11px]">{profile.badge}</p>
+          </div>
         </div>
       </div>
     </section>
