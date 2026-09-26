@@ -127,8 +127,7 @@ export default function Achievements() {
             <motion.div
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.96 }}
-              className="relative z-10 w-full max-w-3xl bg-white dark:bg-darktheme-surface border border-black/[0.08] dark:border-white/15 rounded-4xl p-6 sm:p-8 overflow-hidden shadow-2xl"
+              className="relative z-10 w-full max-w-3xl max-h-[88vh] overflow-y-auto bg-white dark:bg-darktheme-surface border border-black/[0.08] dark:border-white/15 rounded-3xl sm:rounded-4xl p-5 sm:p-8 shadow-2xl"
             >
               <div className="flex items-center justify-between border-b border-black/[0.06] dark:border-white/10 pb-4 mb-6">
                 <div>

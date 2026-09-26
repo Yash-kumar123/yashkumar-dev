@@ -8,7 +8,7 @@ export default function Footer() {
   }
 
   return (
-    <footer className="border-t border-black/[0.06] dark:border-white/[0.08] bg-light-bg dark:bg-darktheme-bg py-14 px-6 sm:px-10 lg:px-16 font-mono text-xs text-light-muted dark:text-darktheme-muted transition-colors duration-700">
+    <footer className="border-t border-black/[0.06] dark:border-white/[0.08] bg-light-bg dark:bg-darktheme-bg pt-12 pb-14 safe-bottom px-6 sm:px-10 lg:px-16 font-mono text-xs text-light-muted dark:text-darktheme-muted transition-colors duration-700">
       <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
         {/* Brand & Identity */}
         <div className="flex items-center gap-3.5 text-left">

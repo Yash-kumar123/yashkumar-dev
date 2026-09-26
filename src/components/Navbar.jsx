@@ -34,7 +34,7 @@ export default function Navbar({ activeSection = 'hero' }) {
   }
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-8 lg:px-12 py-4 transition-all duration-300 pointer-events-none">
+    <header className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-8 lg:px-12 py-3 sm:py-4 safe-top transition-all duration-300 pointer-events-none">
       <div
         className={`max-w-7xl mx-auto flex items-center justify-between px-5 sm:px-6 py-2.5 rounded-full pointer-events-auto transition-all duration-700 ${
           isDark
@@ -141,7 +141,7 @@ export default function Navbar({ activeSection = 'hero' }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -15 }}
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className={`fixed inset-0 z-40 flex flex-col justify-between p-8 sm:p-12 md:hidden font-mono pointer-events-auto transition-colors duration-700 ${
+            className={`fixed inset-0 z-40 flex flex-col justify-between safe-drawer overflow-y-auto md:hidden font-mono pointer-events-auto transition-colors duration-700 ${
               isDark ? 'bg-darktheme-bg/98 text-darktheme-text backdrop-blur-3xl' : 'bg-light-bg/98 text-light-text backdrop-blur-3xl'
             }`}
           >

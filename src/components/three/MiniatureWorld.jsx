@@ -760,25 +760,33 @@ export default function MiniatureWorld() {
   const { isDark } = useTheme()
   const [isHovered, setIsHovered] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [isTablet, setIsTablet] = useState(false)
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      setIsMobile(window.innerWidth < 768)
-      const handleResize = () => setIsMobile(window.innerWidth < 768)
-      window.addEventListener('resize', handleResize)
-      return () => window.removeEventListener('resize', handleResize)
+      const checkDimensions = () => {
+        const w = window.innerWidth
+        setIsMobile(w < 640)
+        setIsTablet(w >= 640 && w < 1024)
+      }
+      checkDimensions()
+      window.addEventListener('resize', checkDimensions)
+      return () => window.removeEventListener('resize', checkDimensions)
     }
   }, [])
 
   return (
     <div
-      className="relative w-full h-[450px] sm:h-[560px] lg:h-[680px] flex items-center justify-center pointer-events-auto"
+      className="relative w-full h-[360px] sm:h-[480px] lg:h-[660px] flex items-center justify-center pointer-events-auto touch-pan-y"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <Canvas
-        camera={{ position: [0, 1.9, 4.8], fov: 42 }}
-        dpr={[1, isMobile ? 1.2 : 1.5]}
+        camera={{
+          position: isMobile ? [0, 2.1, 5.2] : isTablet ? [0, 2.0, 4.9] : [0, 1.9, 4.8],
+          fov: isMobile ? 46 : 42,
+        }}
+        dpr={[1, isMobile ? 1.15 : isTablet ? 1.3 : 1.5]}
         gl={{
           antialias: true,
           alpha: true,
@@ -790,7 +798,7 @@ export default function MiniatureWorld() {
           <fog attach="fog" args={[isDark ? '#0B0E12' : '#F7F8F4', 4.5, 9.8]} />
           <CameraController />
           <NaturalWorldLighting isDark={isDark} />
-          <group position={[0.2, -0.05, 0]}>
+          <group position={[isMobile ? 0 : 0.2, -0.05, 0]} scale={isMobile ? [0.92, 0.92, 0.92] : [1, 1, 1]}>
             <RealisticMountain isDark={isDark} />
             <RealisticWater isDark={isDark} />
             <SubtleTechElements isDark={isDark} />

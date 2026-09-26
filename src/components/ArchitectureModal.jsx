@@ -25,8 +25,7 @@ export default function ArchitectureModal({ project, onClose }) {
           initial={{ opacity: 0, scale: 0.96, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.96, y: 15 }}
-          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-          className="relative z-10 w-full max-w-5xl my-auto bg-white dark:bg-darktheme-surface border border-black/[0.08] dark:border-white/10 rounded-4xl p-6 sm:p-10 shadow-2xl overflow-hidden transition-colors duration-700"
+          className="relative z-10 w-full max-w-5xl my-auto max-h-[88vh] overflow-y-auto bg-white dark:bg-darktheme-surface border border-black/[0.08] dark:border-white/10 rounded-3xl sm:rounded-4xl p-5 sm:p-10 shadow-2xl transition-colors duration-700"
         >
           {/* Header Bar */}
           <div className="flex items-start justify-between border-b border-black/[0.06] dark:border-white/10 pb-6 mb-8">

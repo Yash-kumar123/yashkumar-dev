@@ -222,3 +222,28 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/* Proper Safe Area Insets for Mobile & Tablet (iOS & Android Notch / Home Bar) */
+.safe-top {
+  padding-top: max(1rem, env(safe-area-inset-top));
+}
+.safe-bottom {
+  padding-bottom: max(1.5rem, calc(env(safe-area-inset-bottom) + 1rem));
+}
+.safe-left {
+  padding-left: max(1rem, env(safe-area-inset-left));
+}
+.safe-right {
+  padding-right: max(1rem, env(safe-area-inset-right));
+}
+.safe-x {
+  padding-left: max(1rem, env(safe-area-inset-left));
+  padding-right: max(1rem, env(safe-area-inset-right));
+}
+.safe-drawer {
+  padding-top: max(1.5rem, env(safe-area-inset-top));
+  padding-bottom: max(2rem, env(safe-area-inset-bottom));
+  padding-left: max(1.5rem, env(safe-area-inset-left));
+  padding-right: max(1.5rem, env(safe-area-inset-right));
+}
+
