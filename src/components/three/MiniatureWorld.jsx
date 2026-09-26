@@ -372,6 +372,222 @@ function ExplorerRobot({ isHovered, isDark }) {
   )
 }
 
+// 3b. Cyber Dinosaur Companion (Friendly Futuristic Bio-Mech Raptor)
+function CyberDinosaur({ isHovered, isDark }) {
+  const dinoRef = useRef()
+  const headRef = useRef()
+  const jawRef = useRef()
+  const tailRef = useRef()
+  const tailTipRef = useRef()
+  const eyeLightRef = useRef()
+
+  useFrame((state) => {
+    const t = state.clock.getElapsedTime()
+    const { x, y } = state.pointer
+
+    // Gentle dinosaur breathing & idle bounce
+    if (dinoRef.current) {
+      dinoRef.current.position.y = 0.14 + Math.sin(t * 1.5) * 0.015
+    }
+
+    // Head smoothly turns towards cursor & looks across river towards explorer robot
+    if (headRef.current) {
+      const targetRotY = THREE.MathUtils.clamp(-x * 0.65 + Math.sin(t * 0.45) * 0.25, -0.8, 0.8)
+      const targetRotX = THREE.MathUtils.clamp(-y * 0.35 + Math.sin(t * 0.7) * 0.1, -0.35, 0.35)
+      headRef.current.rotation.y = THREE.MathUtils.lerp(headRef.current.rotation.y, targetRotY, 0.05)
+      headRef.current.rotation.x = THREE.MathUtils.lerp(headRef.current.rotation.x, targetRotX, 0.05)
+    }
+
+    // Jaw subtle breathing nod
+    if (jawRef.current) {
+      jawRef.current.rotation.x = 0.08 + Math.sin(t * 1.5) * 0.06
+    }
+
+    // Organic tail compound sway
+    if (tailRef.current) {
+      tailRef.current.rotation.y = Math.sin(t * 2.2) * 0.22
+    }
+    if (tailTipRef.current) {
+      tailTipRef.current.rotation.y = Math.sin(t * 2.2 - 0.6) * 0.28
+    }
+
+    // Glowing dinosaur eye pulse
+    if (eyeLightRef.current) {
+      eyeLightRef.current.intensity = 0.8 + Math.sin(t * 2.5) * 0.3 + (isHovered ? 0.6 : 0)
+    }
+  })
+
+  const skinColor = isDark ? '#1C2530' : '#E2E8DF'
+  const underbellyColor = isDark ? '#2B3846' : '#FAFBF9'
+  const plateGlowColor = isDark ? '#4DE1D3' : '#22C7C2'
+
+  return (
+    // Standing across the river on the right bank, looking towards the robot & water
+    <group ref={dinoRef} position={[0.92, 0.14, 0.38]} rotation={[0, -0.95, 0]}>
+      {/* Dinosaur Main Body Torso */}
+      <group position={[0, 0.38, 0]} rotation={[0.2, 0, 0]}>
+        <mesh castShadow>
+          <capsuleGeometry args={[0.22, 0.45, 8, 16]} />
+          <meshStandardMaterial
+            color={skinColor}
+            metalness={isDark ? 0.4 : 0.15}
+            roughness={0.5}
+          />
+        </mesh>
+
+        {/* Soft underbelly plate */}
+        <mesh position={[0, -0.06, 0.08]} rotation={[0.1, 0, 0]}>
+          <capsuleGeometry args={[0.18, 0.38, 6, 12]} />
+          <meshStandardMaterial
+            color={underbellyColor}
+            metalness={0.1}
+            roughness={0.6}
+          />
+        </mesh>
+
+        {/* Luminescent Dorsal Spine Plates */}
+        {[-0.22, -0.1, 0.02, 0.14, 0.26].map((zPos, idx) => (
+          <mesh
+            key={idx}
+            position={[0, 0.22 + (idx === 2 ? 0.04 : 0), zPos]}
+            rotation={[-0.3, 0, 0]}
+            scale={[0.8, 1.0 + idx * 0.1, 0.8]}
+          >
+            <coneGeometry args={[0.06, 0.16, 4]} />
+            <meshStandardMaterial
+              color={plateGlowColor}
+              emissive={plateGlowColor}
+              emissiveIntensity={isDark ? 1.2 : 0.6}
+              roughness={0.2}
+            />
+          </mesh>
+        ))}
+      </group>
+
+      {/* Dinosaur Neck & Head */}
+      <group position={[0, 0.58, 0.2]}>
+        {/* Neck */}
+        <mesh position={[0, 0.14, 0.1]} rotation={[0.4, 0, 0]}>
+          <cylinderGeometry args={[0.11, 0.15, 0.32, 12]} />
+          <meshStandardMaterial color={skinColor} roughness={0.5} />
+        </mesh>
+
+        {/* Swivel Head */}
+        <group ref={headRef} position={[0, 0.32, 0.2]}>
+          {/* Cranium Skull Dome */}
+          <mesh castShadow>
+            <sphereGeometry args={[0.16, 16, 16]} />
+            <meshStandardMaterial color={skinColor} roughness={0.45} />
+          </mesh>
+
+          {/* Dinosaur Snout / Upper Beak */}
+          <mesh position={[0, -0.02, 0.18]}>
+            <boxGeometry args={[0.16, 0.13, 0.24]} />
+            <meshStandardMaterial color={skinColor} roughness={0.4} />
+          </mesh>
+
+          {/* Lower Jaw (articulated breathing) */}
+          <mesh ref={jawRef} position={[0, -0.09, 0.16]}>
+            <boxGeometry args={[0.14, 0.05, 0.22]} />
+            <meshStandardMaterial color={underbellyColor} roughness={0.5} />
+          </mesh>
+
+          {/* Glowing Optical Eyes (Left & Right) */}
+          <mesh position={[-0.13, 0.05, 0.08]}>
+            <sphereGeometry args={[0.038, 12, 12]} />
+            <meshBasicMaterial color={plateGlowColor} />
+          </mesh>
+          <mesh position={[0.13, 0.05, 0.08]}>
+            <sphereGeometry args={[0.038, 12, 12]} />
+            <meshBasicMaterial color={plateGlowColor} />
+          </mesh>
+          <pointLight
+            ref={eyeLightRef}
+            position={[0, 0.06, 0.15]}
+            distance={1.4}
+            color={plateGlowColor}
+            intensity={0.8}
+          />
+
+          {/* Cute Mini Crest Horn */}
+          <mesh position={[0, 0.15, -0.02]} rotation={[-0.4, 0, 0]}>
+            <coneGeometry args={[0.045, 0.14, 4]} />
+            <meshStandardMaterial
+              color={plateGlowColor}
+              emissive={plateGlowColor}
+              emissiveIntensity={isDark ? 1.0 : 0.5}
+            />
+          </mesh>
+        </group>
+      </group>
+
+      {/* Articulated Swaying Dinosaur Tail */}
+      <group ref={tailRef} position={[0, 0.35, -0.28]} rotation={[-0.3, 0, 0]}>
+        {/* Tail Base */}
+        <mesh position={[0, 0, -0.2]}>
+          <cylinderGeometry args={[0.09, 0.14, 0.38, 10]} rotation={[Math.PI / 2, 0, 0]} />
+          <meshStandardMaterial color={skinColor} roughness={0.5} />
+        </mesh>
+
+        {/* Tail Mid to Tip */}
+        <group ref={tailTipRef} position={[0, 0, -0.38]}>
+          <mesh position={[0, 0.04, -0.22]}>
+            <coneGeometry args={[0.08, 0.42, 8]} rotation={[-Math.PI / 2, 0, 0]} />
+            <meshStandardMaterial color={skinColor} roughness={0.5} />
+          </mesh>
+          {/* Luminous Tail Tip Fin */}
+          <mesh position={[0, 0.1, -0.32]} rotation={[0.4, 0, 0]}>
+            <coneGeometry args={[0.035, 0.15, 4]} />
+            <meshStandardMaterial
+              color={plateGlowColor}
+              emissive={plateGlowColor}
+              emissiveIntensity={isDark ? 1.4 : 0.8}
+            />
+          </mesh>
+        </group>
+      </group>
+
+      {/* Strong Hind Legs & Feet */}
+      {/* Left Leg */}
+      <group position={[-0.2, 0.22, -0.05]}>
+        <mesh position={[0, -0.08, 0]}>
+          <cylinderGeometry args={[0.08, 0.05, 0.28, 8]} />
+          <meshStandardMaterial color={skinColor} roughness={0.5} />
+        </mesh>
+        <mesh position={[0, -0.24, 0.04]}>
+          <boxGeometry args={[0.11, 0.04, 0.16]} />
+          <meshStandardMaterial color={underbellyColor} roughness={0.6} />
+        </mesh>
+      </group>
+      {/* Right Leg */}
+      <group position={[0.2, 0.22, -0.05]}>
+        <mesh position={[0, -0.08, 0]}>
+          <cylinderGeometry args={[0.08, 0.05, 0.28, 8]} />
+          <meshStandardMaterial color={skinColor} roughness={0.5} />
+        </mesh>
+        <mesh position={[0, -0.24, 0.04]}>
+          <boxGeometry args={[0.11, 0.04, 0.16]} />
+          <meshStandardMaterial color={underbellyColor} roughness={0.6} />
+        </mesh>
+      </group>
+
+      {/* Cute Forearms poised curiously */}
+      <group position={[-0.14, 0.36, 0.22]} rotation={[0.8, -0.2, 0]}>
+        <mesh>
+          <cylinderGeometry args={[0.03, 0.03, 0.14, 6]} />
+          <meshStandardMaterial color={underbellyColor} />
+        </mesh>
+      </group>
+      <group position={[0.14, 0.36, 0.22]} rotation={[0.8, 0.2, 0]}>
+        <mesh>
+          <cylinderGeometry args={[0.03, 0.03, 0.14, 6]} />
+          <meshStandardMaterial color={underbellyColor} />
+        </mesh>
+      </group>
+    </group>
+  )
+}
+
 // 4. Subtle Futuristic Tech Elements: Floating Transparent Holographic Sensor & Energy Beacon
 function SubtleTechElements({ isDark }) {
   const holoRef = useRef()
@@ -569,6 +785,7 @@ export default function MiniatureWorld() {
             <RealisticWater isDark={isDark} />
             <SubtleTechElements isDark={isDark} />
             <ExplorerRobot isHovered={isHovered} isDark={isDark} />
+            <CyberDinosaur isHovered={isHovered} isDark={isDark} />
             <Clouds isDark={isDark} />
           </group>
         </Suspense>
