@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { ArrowDown, Download } from 'lucide-react'
 import { profile } from '../data/portfolioData'
-import DigitalSystemCore from './three/DigitalSystemCore'
+import MiniatureWorld from './three/MiniatureWorld'
 import { scrollToTarget } from '../utils/smoothScroll'
 
 export default function Hero() {
@@ -92,9 +92,9 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        {/* Right Column: Pure 3D Sculptural Presence (NO HUD labels) */}
+        {/* Right Column: Interactive Futuristic Miniature World */}
         <div className="lg:col-span-6 xl:col-span-6 relative flex items-center justify-center pointer-events-auto">
-          <DigitalSystemCore />
+          <MiniatureWorld />
         </div>
       </div>
 
