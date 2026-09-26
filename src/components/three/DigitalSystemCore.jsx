@@ -2,238 +2,265 @@ import React, { useRef, useMemo, useState, useEffect, Suspense } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 
-// Iridescent Digital Core with Pearl, Ice, Aqua, and Lavender materials
-function IridescentCore({ isHovered }) {
-  const outerRingRef = useRef()
-  const midRingRef = useRef()
-  const innerRingRef = useRef()
-  const glassIcosaRef = useRef()
-  const centralCoreRef = useRef()
-  const nodesGroupRef = useRef()
-  const floatGroupRef = useRef()
+// Custom Procedural Ribbon Geometry Generator
+// Creates a smooth, continuous folded architectural ribbon with variable twist and thickness
+function createArchitecturalRibbonGeometry() {
+  // Closed 3D Catmull-Rom spline with asymmetric architectural loops & negative space
+  const controlPoints = [
+    new THREE.Vector3(0.2, 1.9, 0.3),
+    new THREE.Vector3(1.5, 1.3, -0.7),
+    new THREE.Vector3(1.9, -0.2, 0.6),
+    new THREE.Vector3(0.8, -1.6, -0.5),
+    new THREE.Vector3(-0.7, -1.8, 0.5),
+    new THREE.Vector3(-1.9, -0.4, -0.6),
+    new THREE.Vector3(-1.3, 1.4, 0.6),
+    new THREE.Vector3(0.3, 0.8, -0.9),
+    new THREE.Vector3(1.2, 0.0, 0.8),
+    new THREE.Vector3(0.2, -0.9, 0.1),
+    new THREE.Vector3(-0.9, -0.6, -0.7),
+    new THREE.Vector3(-0.4, 1.0, 0.4),
+  ]
 
-  // Generate satellite computational nodes on a spherical coordinate shell
-  const nodePositions = useMemo(() => {
-    const coords = []
-    const count = 12
-    for (let i = 0; i < count; i++) {
-      const phi = Math.acos(-1 + (2 * i) / count)
-      const theta = Math.sqrt(count * Math.PI) * phi
-      const r = 2.3
-      coords.push(
-        new THREE.Vector3(
-          r * Math.cos(theta) * Math.sin(phi),
-          r * Math.sin(theta) * Math.sin(phi),
-          r * Math.cos(phi)
-        )
-      )
+  const curve = new THREE.CatmullRomCurve3(controlPoints, true, 'centripetal')
+  
+  const segments = 240
+  const profileSteps = 20
+  const ribbonWidth = 0.52
+  const ribbonThickness = 0.075
+
+  const vertices = []
+  const normals = []
+  const uvs = []
+  const indices = []
+
+  // Sample Frenet frames along the curve
+  const frames = curve.computeFrenetFrames(segments, true)
+
+  for (let i = 0; i <= segments; i++) {
+    const u = i / segments
+    const pt = curve.getPointAt(u % 1)
+    const N = frames.normals[i % segments].clone()
+    const B = frames.binormals[i % segments].clone()
+
+    // Smooth architectural twist angle along the continuous closed ribbon
+    const twistAngle = u * Math.PI * 4 + Math.sin(u * Math.PI * 2) * 0.8
+    const cosT = Math.cos(twistAngle)
+    const sinT = Math.sin(twistAngle)
+
+    const normal = N.clone().multiplyScalar(cosT).add(B.clone().multiplyScalar(sinT)).normalize()
+    const binormal = N.clone().multiplyScalar(-sinT).add(B.clone().multiplyScalar(cosT)).normalize()
+
+    // Create an aerodynamic, curved ribbon profile (flat elliptical with rounded edges)
+    for (let j = 0; j <= profileSteps; j++) {
+      const v = j / profileSteps
+      const angle = v * Math.PI * 2
+
+      // Flat curved profile equation
+      const xOffset = Math.sin(angle) * (ribbonWidth * 0.5)
+      const yOffset = Math.cos(angle) * (ribbonThickness * 0.5) * (1 - Math.pow(Math.abs(xOffset) / (ribbonWidth * 0.5), 2) * 0.3)
+
+      const vertex = pt.clone()
+        .add(normal.clone().multiplyScalar(xOffset))
+        .add(binormal.clone().multiplyScalar(yOffset))
+
+      vertices.push(vertex.x, vertex.y, vertex.z)
+
+      const vertexNormal = normal.clone().multiplyScalar(Math.sin(angle))
+        .add(binormal.clone().multiplyScalar(Math.cos(angle))).normalize()
+      normals.push(vertexNormal.x, vertexNormal.y, vertexNormal.z)
+
+      uvs.push(u, v)
     }
-    return coords
-  }, [])
+  }
 
-  // Spoke lines connecting central origin to peripheral nodes
-  const spokeGeometry = useMemo(() => {
-    const points = []
-    nodePositions.forEach((pos) => {
-      points.push(new THREE.Vector3(0, 0, 0))
-      points.push(pos)
-    })
-    return new THREE.BufferGeometry().setFromPoints(points)
-  }, [nodePositions])
+  // Generate face indices
+  for (let i = 0; i < segments; i++) {
+    for (let j = 0; j < profileSteps; j++) {
+      const a = i * (profileSteps + 1) + j
+      const b = (i + 1) * (profileSteps + 1) + j
+      const c = (i + 1) * (profileSteps + 1) + (j + 1)
+      const d = i * (profileSteps + 1) + (j + 1)
 
-  // Floating iridescent shards
-  const shards = useMemo(() => {
-    const arr = []
-    for (let i = 0; i < 6; i++) {
-      const angle = (i / 6) * Math.PI * 2
-      const r = 1.8
-      arr.push({
-        pos: [Math.cos(angle) * r, (i % 2 === 0 ? 0.4 : -0.4), Math.sin(angle) * r],
-        rot: [Math.random() * Math.PI, Math.random() * Math.PI, 0],
-        scale: 0.16 + (i % 2) * 0.06,
-      })
+      indices.push(a, b, d)
+      indices.push(b, c, d)
     }
-    return arr
-  }, [])
+  }
+
+  const geometry = new THREE.BufferGeometry()
+  geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3))
+  geometry.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3))
+  geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2))
+  geometry.setIndex(indices)
+  geometry.computeVertexNormals()
+
+  return geometry
+}
+
+// Single Hairline Secondary Curve
+function createHairlinePath() {
+  const pts = [
+    new THREE.Vector3(-1.6, 1.8, -0.4),
+    new THREE.Vector3(-0.4, 2.2, 0.8),
+    new THREE.Vector3(1.6, 1.0, 0.3),
+    new THREE.Vector3(1.8, -1.4, -0.6),
+    new THREE.Vector3(0.0, -2.1, 0.4),
+    new THREE.Vector3(-1.7, -1.0, 0.2),
+  ]
+  const curve = new THREE.CatmullRomCurve3(pts, false, 'centripetal')
+  return new THREE.TubeGeometry(curve, 100, 0.009, 12, false)
+}
+
+function LiquidSculpture({ isHovered }) {
+  const sculptureGroupRef = useRef()
+  const ribbonMeshRef = useRef()
+  const innerCoreRef = useRef()
+  const hairlineRef = useRef()
+
+  const ribbonGeometry = useMemo(() => createArchitecturalRibbonGeometry(), [])
+  const hairlineGeometry = useMemo(() => createHairlinePath(), [])
 
   useFrame((state) => {
     const t = state.clock.getElapsedTime()
     const { x, y } = state.pointer
 
-    // Gentle float wave
-    if (floatGroupRef.current) {
-      floatGroupRef.current.position.y = Math.sin(t * 1.2) * 0.1
+    // Extremely slow, dignified breathing motion — NOT an aggressive spin
+    if (sculptureGroupRef.current) {
+      // Gentle buoyancy
+      sculptureGroupRef.current.position.y = Math.sin(t * 0.7) * 0.08
+      
+      // Smooth damped parallax responding to mouse
+      sculptureGroupRef.current.rotation.y = THREE.MathUtils.lerp(
+        sculptureGroupRef.current.rotation.y,
+        t * 0.05 + x * 0.35,
+        0.04
+      )
+      sculptureGroupRef.current.rotation.x = THREE.MathUtils.lerp(
+        sculptureGroupRef.current.rotation.x,
+        -y * 0.25 + Math.sin(t * 0.4) * 0.04,
+        0.04
+      )
     }
 
-    // Outer Frosted Ice/Pearl Ring
-    if (outerRingRef.current) {
-      outerRingRef.current.rotation.x = t * 0.1 + y * 0.25
-      outerRingRef.current.rotation.y = t * 0.14 + x * 0.25
+    // Refined inner core subtle luminous pulse
+    if (innerCoreRef.current) {
+      const s = 1 + Math.sin(t * 2.2) * 0.04 + (isHovered ? 0.08 : 0)
+      innerCoreRef.current.scale.set(s, s, s)
     }
 
-    // Middle Soft Aqua Gimbal Ring
-    if (midRingRef.current) {
-      midRingRef.current.rotation.x = -t * 0.15 - y * 0.2
-      midRingRef.current.rotation.z = t * 0.12 + x * 0.2
-    }
-
-    // Inner Lavender Gyro Ring
-    if (innerRingRef.current) {
-      innerRingRef.current.rotation.y = t * 0.22 + x * 0.3
-      innerRingRef.current.rotation.x = t * 0.18
-    }
-
-    // Glass Geometric Core
-    if (glassIcosaRef.current) {
-      glassIcosaRef.current.rotation.y = -t * 0.25
-      glassIcosaRef.current.rotation.z = Math.sin(t * 0.5) * 0.1
-    }
-
-    // Central Singularity
-    if (centralCoreRef.current) {
-      const s = 1 + Math.sin(t * 2.5) * 0.06 + (isHovered ? 0.12 : 0)
-      centralCoreRef.current.scale.set(s, s, s)
-    }
-
-    if (nodesGroupRef.current) {
-      nodesGroupRef.current.rotation.y = t * 0.06
+    if (hairlineRef.current) {
+      hairlineRef.current.rotation.y = -t * 0.03
     }
   })
 
   return (
-    <group ref={floatGroupRef}>
-      {/* Outer Frosted Pearl Ring */}
-      <mesh ref={outerRingRef}>
-        <torusGeometry args={[2.55, 0.04, 24, 100]} />
-        <meshStandardMaterial
-          color="#FFFFFF"
-          roughness={0.15}
-          metalness={0.4}
-          emissive="#E6FAF9"
-          emissiveIntensity={0.3}
-        />
-      </mesh>
-
-      {/* Middle Bright Aqua Translucent Ring */}
-      <mesh ref={midRingRef}>
-        <torusGeometry args={[2.15, 0.025, 24, 90]} />
-        <meshStandardMaterial
-          color="#35D6D0"
-          roughness={0.2}
-          metalness={0.5}
-          emissive="#35D6D0"
-          emissiveIntensity={isHovered ? 0.8 : 0.4}
-        />
-      </mesh>
-
-      {/* Inner Lavender Accent Ring */}
-      <mesh ref={innerRingRef} rotation={[Math.PI / 3, Math.PI / 6, 0]}>
-        <torusGeometry args={[1.75, 0.02, 24, 80]} />
-        <meshStandardMaterial
-          color="#A994FF"
-          roughness={0.25}
-          metalness={0.3}
-          emissive="#A994FF"
-          emissiveIntensity={0.4}
-        />
-      </mesh>
-
-      {/* Translucent Glass Computational Polyhedron (Apple Glass Look) */}
-      <mesh ref={glassIcosaRef}>
-        <icosahedronGeometry args={[1.35, 1]} />
+    <group ref={sculptureGroupRef} position={[0.2, 0, 0]}>
+      {/* Primary Folded Liquid Ribbon Sculpture */}
+      <mesh ref={ribbonMeshRef} geometry={ribbonGeometry}>
+        {/* Pearl / Liquid Glass / Soft Chrome Material */}
         <meshPhysicalMaterial
-          roughness={0.1}
-          transmission={0.85}
-          thickness={1.2}
-          ior={1.45}
           color="#FFFFFF"
-          transparent
-          opacity={0.8}
+          metalness={0.22}
+          roughness={0.12}
+          transmission={0.42}
+          thickness={1.4}
+          ior={1.48}
+          clearcoat={1.0}
+          clearcoatRoughness={0.06}
+          iridescence={0.88}
+          iridescenceIOR={1.35}
+          iridescenceThicknessRange={[100, 380]}
+          reflectivity={0.95}
+          specularIntensity={1.0}
+          specularColor="#FFFFFF"
         />
       </mesh>
 
-      {/* Fine Connection Wireframe Spokes */}
-      <lineSegments geometry={spokeGeometry}>
-        <lineBasicMaterial color="#35D6D0" transparent opacity={0.35} />
-      </lineSegments>
-
-      {/* Peripheral Pearl/Mint Computational Nodes */}
-      <group ref={nodesGroupRef}>
-        {nodePositions.map((pos, i) => (
-          <mesh key={i} position={pos}>
-            <sphereGeometry args={[0.075, 20, 20]} />
-            <meshStandardMaterial
-              color={i % 2 === 0 ? '#35D6D0' : '#78E5B1'}
-              roughness={0.1}
-              metalness={0.6}
-              emissive={i % 2 === 0 ? '#35D6D0' : '#78E5B1'}
-              emissiveIntensity={0.6}
-            />
-          </mesh>
-        ))}
-      </group>
-
-      {/* Floating Shards (Ice Crystals / Polished Metal) */}
-      {shards.map((sh, idx) => (
-        <mesh
-          key={idx}
-          position={sh.pos}
-          rotation={sh.rot}
-          scale={sh.scale}
-        >
-          <octahedronGeometry args={[1, 0]} />
+      {/* Internal Architectural Luminous Core (Refined Capsule/Crystal) */}
+      <group position={[0.08, -0.05, 0]}>
+        <mesh ref={innerCoreRef}>
+          <capsuleGeometry args={[0.16, 0.65, 24, 32]} />
           <meshStandardMaterial
-            color="#FFFFFF"
-            metalness={0.6}
+            color="#FAFAF7"
+            emissive="#E0F7F8"
+            emissiveIntensity={isHovered ? 1.4 : 0.9}
             roughness={0.1}
-            wireframe={idx % 2 === 0}
+            metalness={0.1}
           />
         </mesh>
-      ))}
 
-      {/* Central Luminous Energy Core (Iridescent Mint / Aqua) */}
-      <mesh ref={centralCoreRef}>
-        <sphereGeometry args={[0.55, 32, 32]} />
+        {/* Soft internal core glow shell */}
+        <mesh>
+          <capsuleGeometry args={[0.24, 0.72, 16, 16]} />
+          <meshBasicMaterial
+            color="#5BA8FF"
+            transparent
+            opacity={0.14}
+            wireframe
+          />
+        </mesh>
+
+        {/* Internal Core Local Lighting */}
+        <pointLight intensity={1.8} distance={3.5} color="#E0F8FA" />
+      </group>
+
+      {/* Single Hairline Secondary Architectural Path */}
+      <mesh ref={hairlineRef} geometry={hairlineGeometry}>
         <meshStandardMaterial
-          color="#FFFFFF"
-          emissive="#35D6D0"
-          emissiveIntensity={isHovered ? 1.5 : 1.0}
-          roughness={0.15}
-          metalness={0.2}
-        />
-      </mesh>
-
-      {/* Soft Luminous Outer Corona */}
-      <mesh>
-        <sphereGeometry args={[0.72, 24, 24]} />
-        <meshBasicMaterial
-          color="#78E5B1"
+          color="#D4D9E2"
+          metalness={0.7}
+          roughness={0.2}
           transparent
-          opacity={isHovered ? 0.22 : 0.12}
-          wireframe
+          opacity={0.65}
         />
       </mesh>
     </group>
   )
 }
 
-function StudioLighting({ isHovered }) {
+// Studio Product Lighting & Soft Contact Shadow
+function StudioEnvironment({ isHovered }) {
   return (
     <>
       {/* Soft Ambient Fill */}
-      <ambientLight intensity={0.9} color="#FAFAF7" />
+      <ambientLight intensity={1.1} color="#FAFAF7" />
 
-      {/* Key Studio Light (Warm Product Highlight) */}
-      <directionalLight position={[6, 9, 7]} intensity={1.8} color="#FFFFFF" />
+      {/* Main Studio Key Light (Pure Soft White) */}
+      <directionalLight
+        position={[6, 8, 6]}
+        intensity={2.2}
+        color="#FFFFFF"
+      />
 
-      {/* Cool Rim Light (Aqua/Sky Reflection) */}
-      <directionalLight position={[-6, -4, -5]} intensity={1.2} color="#5BA8FF" />
+      {/* Soft Cool Fill Light (Icy Sky) */}
+      <directionalLight
+        position={[-6, 3, -4]}
+        intensity={1.2}
+        color="#E8F2FF"
+      />
 
-      {/* Soft Lavender Under-Bounce Light */}
-      <directionalLight position={[0, -6, 5]} intensity={0.8} color="#A994FF" />
+      {/* Warm Rim Highlight (Soft Peach / Gold) */}
+      <directionalLight
+        position={[3, -5, -4]}
+        intensity={0.9}
+        color="#FFF4EC"
+      />
 
-      {/* Central Core Point Glow */}
-      <pointLight position={[0, 0, 0]} intensity={isHovered ? 3.0 : 1.8} color="#35D6D0" distance={8} />
+      {/* Subtle Lavender Back-Rim */}
+      <directionalLight
+        position={[-2, 6, -6]}
+        intensity={0.8}
+        color="#F0E8FF"
+      />
+
+      {/* Soft Contact Shadow beneath the sculpture */}
+      <mesh position={[0.2, -2.6, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[4.2, 4.2]} />
+        <meshBasicMaterial
+          color="#111318"
+          transparent
+          opacity={0.065}
+        />
+      </mesh>
     </>
   )
 }
@@ -263,12 +290,8 @@ export default function DigitalSystemCore() {
   if (!hasWebGL) {
     return (
       <div className="w-full h-full flex items-center justify-center">
-        <div className="relative w-64 h-64 rounded-full border border-aqua/40 flex items-center justify-center animate-spin-slow bg-white/40 backdrop-blur-md">
-          <div className="w-48 h-48 rounded-full border border-dashed border-sky/30" />
-          <div className="absolute w-24 h-24 rounded-full bg-aqua/20 blur-xl" />
-          <div className="w-14 h-14 rounded-full bg-white shadow-soft-md flex items-center justify-center">
-            <span className="w-3.5 h-3.5 rounded-full bg-aqua" />
-          </div>
+        <div className="w-64 h-64 rounded-full bg-gradient-to-tr from-white to-sky-light border border-black/[0.06] shadow-soft-xl flex items-center justify-center">
+          <div className="w-32 h-32 rounded-full bg-white shadow-soft-md" />
         </div>
       </div>
     )
@@ -276,12 +299,12 @@ export default function DigitalSystemCore() {
 
   return (
     <div
-      className="relative w-full h-[380px] sm:h-[480px] lg:h-[620px] flex items-center justify-center"
+      className="relative w-full h-[400px] sm:h-[500px] lg:h-[640px] flex items-center justify-center"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <Canvas
-        camera={{ position: [0, 0, 6.2], fov: 42 }}
+        camera={{ position: [0.1, 0, 5.8], fov: 40 }}
         dpr={[1, isMobile ? 1.2 : 1.5]}
         gl={{
           antialias: true,
@@ -291,8 +314,8 @@ export default function DigitalSystemCore() {
         className="w-full h-full"
       >
         <Suspense fallback={null}>
-          <StudioLighting isHovered={isHovered} />
-          <IridescentCore isHovered={isHovered} />
+          <StudioEnvironment isHovered={isHovered} />
+          <LiquidSculpture isHovered={isHovered} />
         </Suspense>
       </Canvas>
     </div>
