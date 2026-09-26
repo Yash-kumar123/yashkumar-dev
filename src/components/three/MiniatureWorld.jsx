@@ -1,165 +1,118 @@
 import React, { useRef, useMemo, useState, useEffect, Suspense } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
+import { useTheme } from '../../context/ThemeContext'
 
-// 1. Stylized Mountains (Soft Lavender / Periwinkle Blue / Mint)
-function Mountains() {
+// 1. Realistic Sculpted Mountain Terrain with Ridge Strata & Alpine Slopes
+function RealisticMountain({ isDark }) {
+  const meshRef = useRef()
+
+  // Generate procedural realistic mountain terrain vertices using harmonic noise
+  const { geometry, rockColors } = useMemo(() => {
+    const size = 7.5
+    const segments = 84
+    const geo = new THREE.PlaneGeometry(size, size, segments, segments)
+    geo.rotateX(-Math.PI / 2)
+
+    const pos = geo.attributes.position
+    const count = pos.count
+    const colors = new Float32Array(count * 3)
+
+    // Palette base colors for light and dark
+    const lightPeak = new THREE.Color('#FAFBF9')
+    const lightRock = new THREE.Color('#98A3B5')
+    const lightMoss = new THREE.Color('#6EA887')
+    const lightValley = new THREE.Color('#DFE8DF')
+
+    const darkPeak = new THREE.Color('#8DA0B8')
+    const darkRock = new THREE.Color('#252D37')
+    const darkMoss = new THREE.Color('#1E3D34')
+    const darkValley = new THREE.Color('#141C24')
+
+    const peakCol = isDark ? darkPeak : lightPeak
+    const rockCol = isDark ? darkRock : lightRock
+    const mossCol = isDark ? darkMoss : lightMoss
+    const valCol = isDark ? darkValley : lightValley
+
+    for (let i = 0; i < count; i++) {
+      const x = pos.getX(i)
+      const z = pos.getZ(i)
+
+      // Mountain shape: High jagged peaks at back-left and back-right, river valley running forward
+      const distFromCenter = Math.sqrt(x * x + z * z)
+      const backFactor = Math.max(0, -z + 0.8) // higher toward the back (-z)
+      const valleyTrough = Math.exp(-Math.pow(x - 0.2 * z, 2) * 1.8) // carved river canyon
+
+      // Multi-octave natural ridge displacement
+      const octave1 = Math.sin(x * 0.9 + 1.2) * Math.cos(z * 0.8) * 0.9
+      const octave2 = Math.sin(x * 1.9 - 0.8) * Math.cos(z * 1.7) * 0.45
+      const octave3 = Math.sin(x * 3.8) * Math.cos(z * 3.5) * 0.18
+      const cragNoise = Math.sin(x * 7.5) * Math.cos(z * 7.5) * 0.06
+
+      // Mountain height
+      let height = (backFactor * 1.4 + 0.4) * (octave1 + octave2 + octave3 + 1.2)
+      // Carve out the river gorge where water flows
+      height = height * (1 - valleyTrough * 0.75) + cragNoise
+
+      // Flatten edges to prevent hard clipping
+      const edgeFalloff = Math.cos(Math.min(Math.PI / 2, (distFromCenter / (size * 0.5)) * (Math.PI / 2)))
+      height = height * edgeFalloff - 0.35
+
+      pos.setY(i, height)
+
+      // Color interpolation based on height & slope for realistic rock strata
+      const tempColor = new THREE.Color()
+      if (height > 1.4) {
+        tempColor.lerpColors(rockCol, peakCol, Math.min(1, (height - 1.4) / 0.8))
+      } else if (height > 0.4) {
+        tempColor.lerpColors(mossCol, rockCol, (height - 0.4) / 1.0)
+      } else {
+        tempColor.lerpColors(valCol, mossCol, Math.max(0, (height + 0.2) / 0.6))
+      }
+
+      colors[i * 3] = tempColor.r
+      colors[i * 3 + 1] = tempColor.g
+      colors[i * 3 + 2] = tempColor.b
+    }
+
+    geo.computeVertexNormals()
+    geo.setAttribute('color', new THREE.BufferAttribute(colors, 3))
+    return { geometry: geo, rockColors: colors }
+  }, [isDark])
+
   return (
-    <group position={[0, 0, -2.2]}>
-      {/* Tall Main Peak (Center-Left) */}
-      <mesh position={[-1.2, 1.4, -0.6]} rotation={[0, 0.4, 0]}>
-        <coneGeometry args={[1.5, 3.2, 5]} />
-        <meshStandardMaterial
-          color="#B8C8E8"
-          roughness={0.65}
-          metalness={0.1}
-          flatShading
-        />
-      </mesh>
-
-      {/* Snow / Light Summit Cap for Main Peak */}
-      <mesh position={[-1.2, 2.4, -0.58]} rotation={[0, 0.4, 0]}>
-        <coneGeometry args={[0.55, 1.2, 5]} />
-        <meshStandardMaterial
-          color="#FAFAF7"
-          roughness={0.4}
-          metalness={0.05}
-          flatShading
-        />
-      </mesh>
-
-      {/* Secondary Peak (Center-Right, Behind Waterfall) */}
-      <mesh position={[0.7, 1.1, -1.0]} rotation={[0, -0.6, 0]}>
-        <coneGeometry args={[1.4, 2.6, 6]} />
-        <meshStandardMaterial
-          color="#C9D6ED"
-          roughness={0.7}
-          metalness={0.1}
-          flatShading
-        />
-      </mesh>
-
-      {/* Distant Ridge Peak (Right, Atmospheric Lavender Fade) */}
-      <mesh position={[2.2, 0.7, -1.8]} rotation={[0, 0.2, 0]}>
-        <coneGeometry args={[1.6, 2.2, 5]} />
-        <meshStandardMaterial
-          color="#D7E0F2"
-          roughness={0.8}
-          metalness={0.05}
-          flatShading
-        />
-      </mesh>
-
-      {/* Distant Ridge Peak (Far Left) */}
-      <mesh position={[-2.6, 0.6, -1.5]} rotation={[0, -0.3, 0]}>
-        <coneGeometry args={[1.3, 2.0, 5]} />
-        <meshStandardMaterial
-          color="#CCD7EC"
-          roughness={0.8}
-          metalness={0.05}
-          flatShading
-        />
-      </mesh>
-    </group>
+    <mesh
+      ref={meshRef}
+      geometry={geometry}
+      position={[0, -0.2, -0.6]}
+      receiveShadow
+      castShadow
+    >
+      <meshStandardMaterial
+        vertexColors
+        roughness={0.75}
+        metalness={isDark ? 0.2 : 0.05}
+        flatShading={false}
+      />
+    </mesh>
   )
 }
 
-// 2. Floating Island Terrain with Riverbed & Shoreline
-function IslandTerrain() {
-  return (
-    <group position={[0, -0.4, 0]}>
-      {/* Top Grass / Moss Plate (Soft Mint & Pastel Green) */}
-      <mesh position={[0, 0.05, 0]} receiveShadow>
-        <cylinderGeometry args={[2.7, 2.85, 0.35, 32]} />
-        <meshStandardMaterial
-          color="#D6F0E0"
-          roughness={0.8}
-          metalness={0.05}
-        />
-      </mesh>
-
-      {/* Rocky Sub-surface / Layered Cliff Base (Warm Clay / Soft Gray-Blue) */}
-      <mesh position={[0, -0.65, 0]} receiveShadow>
-        <cylinderGeometry args={[2.85, 1.2, 1.1, 16]} />
-        <meshStandardMaterial
-          color="#C8CFDE"
-          roughness={0.85}
-          metalness={0.1}
-          flatShading
-        />
-      </mesh>
-
-      {/* Bottom Floating Island Rock Tip */}
-      <mesh position={[0, -1.5, 0]} rotation={[Math.PI, 0, 0]}>
-        <coneGeometry args={[1.2, 0.9, 12]} />
-        <meshStandardMaterial
-          color="#B0B9CC"
-          roughness={0.9}
-          metalness={0.1}
-          flatShading
-        />
-      </mesh>
-
-      {/* Riverbank Decorative Boulders */}
-      {[
-        { pos: [-0.65, 0.26, -0.1], s: 0.22, color: '#A0ABC0' },
-        { pos: [-0.45, 0.24, 0.6], s: 0.18, color: '#A8B3C8' },
-        { pos: [0.55, 0.24, 0.4], s: 0.24, color: '#9AA7BF' },
-        { pos: [0.75, 0.23, -0.5], s: 0.2, color: '#A8B3C8' },
-        { pos: [-0.2, 0.22, 1.4], s: 0.16, color: '#B5C0D4' },
-        { pos: [0.3, 0.22, -1.2], s: 0.25, color: '#9AA7BF' },
-      ].map((rock, idx) => (
-        <mesh key={idx} position={rock.pos} scale={[rock.s, rock.s * 0.7, rock.s]}>
-          <dodecahedronGeometry args={[1, 0]} />
-          <meshStandardMaterial color={rock.color} roughness={0.7} flatShading />
-        </mesh>
-      ))}
-
-      {/* Stylized Low-Poly Pine / Crystal Trees */}
-      {[
-        { pos: [-1.8, 0.5, -0.8], h: 0.9, r: 0.35 },
-        { pos: [-2.1, 0.45, -0.2], h: 0.75, r: 0.3 },
-        { pos: [-1.5, 0.45, 0.5], h: 0.7, r: 0.28 },
-        { pos: [1.8, 0.5, -0.7], h: 0.85, r: 0.35 },
-        { pos: [2.1, 0.42, 0.1], h: 0.65, r: 0.28 },
-        { pos: [1.6, 0.45, 0.8], h: 0.75, r: 0.3 },
-      ].map((tree, idx) => (
-        <group key={idx} position={tree.pos}>
-          {/* Trunk */}
-          <mesh position={[0, 0.1, 0]}>
-            <cylinderGeometry args={[0.04, 0.06, 0.25, 6]} />
-            <meshStandardMaterial color="#8A92A6" roughness={0.9} />
-          </mesh>
-          {/* Foliage Cones */}
-          <mesh position={[0, 0.35, 0]}>
-            <coneGeometry args={[tree.r, tree.h * 0.55, 6]} />
-            <meshStandardMaterial color="#78E5B1" roughness={0.65} flatShading />
-          </mesh>
-          <mesh position={[0, 0.52, 0]}>
-            <coneGeometry args={[tree.r * 0.75, tree.h * 0.45, 6]} />
-            <meshStandardMaterial color="#A3F2CD" roughness={0.65} flatShading />
-          </mesh>
-        </group>
-      ))}
-    </group>
-  )
-}
-
-// 3. Flowing Water & Waterfall with Animated Ripples & Mist Particles
-function WaterfallAndRiver() {
+// 2. Realistic Water System: Cascading Waterfall, Plunge Pool, and Flowing Meandering River
+function RealisticWater({ isDark }) {
   const waterfallRef = useRef()
   const riverRef = useRef()
-  const mistPointsRef = useRef()
+  const mistRef = useRef()
 
-  // Mist particles near the waterfall pool
-  const particleCount = 45
+  // Generate water particles for waterfall mist
+  const particleCount = 60
   const [mistPositions, initialY] = useMemo(() => {
     const pos = new Float32Array(particleCount * 3)
     const initY = new Float32Array(particleCount)
     for (let i = 0; i < particleCount; i++) {
-      pos[i * 3] = (Math.random() - 0.5) * 0.65
-      pos[i * 3 + 1] = -0.15 + Math.random() * 0.4
-      pos[i * 3 + 2] = -0.75 + (Math.random() - 0.5) * 0.4
+      pos[i * 3] = (Math.random() - 0.5) * 0.75
+      pos[i * 3 + 1] = -0.1 + Math.random() * 0.35
+      pos[i * 3 + 2] = -0.9 + (Math.random() - 0.5) * 0.45
       initY[i] = pos[i * 3 + 1]
     }
     return [pos, initY]
@@ -168,83 +121,93 @@ function WaterfallAndRiver() {
   useFrame((state) => {
     const t = state.clock.getElapsedTime()
 
-    // Waterfall shimmering wave offset
-    if (waterfallRef.current) {
-      waterfallRef.current.position.y = 0.55 + Math.sin(t * 8) * 0.015
-    }
-
-    // River gentle wave pulsing
+    // Dynamic wave ripples on river surface
     if (riverRef.current) {
-      riverRef.current.position.y = -0.16 + Math.sin(t * 3) * 0.008
+      riverRef.current.position.y = -0.06 + Math.sin(t * 3.5) * 0.007
+      const pos = riverRef.current.geometry.attributes.position
+      for (let i = 0; i < pos.count; i++) {
+        const u = pos.getX(i)
+        const v = pos.getY(i)
+        const zWave = Math.sin(u * 5.0 + t * 4.0) * 0.02 + Math.cos(v * 4.0 + t * 3.0) * 0.015
+        pos.setZ(i, zWave)
+      }
+      pos.needsUpdate = true
     }
 
-    // Mist particle upward drift & loop
-    if (mistPointsRef.current) {
-      const positions = mistPointsRef.current.geometry.attributes.position.array
+    // Waterfall shimmering cascade
+    if (waterfallRef.current) {
+      waterfallRef.current.position.y = 0.58 + Math.sin(t * 9) * 0.012
+    }
+
+    // Mist particles upward drift
+    if (mistRef.current) {
+      const positions = mistRef.current.geometry.attributes.position.array
       for (let i = 0; i < particleCount; i++) {
-        positions[i * 3 + 1] += 0.006
-        if (positions[i * 3 + 1] > 0.45) {
+        positions[i * 3 + 1] += 0.007
+        if (positions[i * 3 + 1] > 0.48) {
           positions[i * 3 + 1] = initialY[i]
         }
       }
-      mistPointsRef.current.geometry.attributes.position.needsUpdate = true
+      mistRef.current.geometry.attributes.position.needsUpdate = true
     }
   })
 
   return (
     <group>
-      {/* Waterfall: Cascading down from mountain plateau to river */}
+      {/* Waterfall: Cascading down the mountain canyon cliff */}
       <mesh
         ref={waterfallRef}
-        position={[0.05, 0.55, -1.05]}
-        rotation={[0.32, 0, 0]}
+        position={[0.08, 0.58, -1.05]}
+        rotation={[0.38, 0, 0]}
       >
-        <planeGeometry args={[0.55, 1.45, 12, 12]} />
+        <planeGeometry args={[0.65, 1.45, 16, 16]} />
         <meshPhysicalMaterial
-          color="#35D6D0"
-          emissive="#78E5B1"
-          emissiveIntensity={0.25}
-          transmission={0.7}
-          roughness={0.15}
-          ior={1.33}
+          color={isDark ? '#4DE1D3' : '#22C7C2'}
+          emissive={isDark ? '#124B52' : '#71D7A4'}
+          emissiveIntensity={isDark ? 0.4 : 0.25}
+          transmission={0.8}
+          roughness={0.1}
+          ior={1.333}
+          reflectivity={0.9}
           transparent
-          opacity={0.85}
+          opacity={0.9}
           side={THREE.DoubleSide}
         />
       </mesh>
 
-      {/* Waterfall Splash Basin Pool */}
-      <mesh position={[0.05, -0.14, -0.75]} rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[0.42, 24]} />
+      {/* Waterfall Plunge Pool with Foam Ring */}
+      <mesh position={[0.08, -0.06, -0.65]} rotation={[-Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[0.55, 32]} />
         <meshStandardMaterial
-          color="#78E5B1"
-          roughness={0.1}
-          metalness={0.2}
-          transparent
-          opacity={0.9}
-        />
-      </mesh>
-
-      {/* Main Flowing River: Meanders across island towards viewer */}
-      <mesh
-        ref={riverRef}
-        position={[0.08, -0.16, 0.35]}
-        rotation={[-Math.PI / 2, 0, -0.15]}
-      >
-        <planeGeometry args={[0.7, 2.3, 16, 16]} />
-        <meshPhysicalMaterial
-          color="#35D6D0"
-          transmission={0.65}
-          roughness={0.12}
-          ior={1.33}
-          reflectivity={0.9}
+          color={isDark ? '#2AA89E' : '#71D7A4'}
+          roughness={0.15}
+          metalness={isDark ? 0.3 : 0.1}
           transparent
           opacity={0.88}
         />
       </mesh>
 
-      {/* Waterfall Mist Particles */}
-      <points ref={mistPointsRef}>
+      {/* Main River: Flows through the mountain valley towards the viewer */}
+      <mesh
+        ref={riverRef}
+        position={[0.12, -0.06, 0.65]}
+        rotation={[-Math.PI / 2, 0, -0.1]}
+      >
+        <planeGeometry args={[1.05, 2.8, 24, 24]} />
+        <meshPhysicalMaterial
+          color={isDark ? '#1D6B66' : '#22C7C2'}
+          transmission={0.75}
+          roughness={0.08}
+          ior={1.333}
+          reflectivity={0.95}
+          clearcoat={1.0}
+          transparent
+          opacity={0.92}
+        />
+      </mesh>
+
+      {/* Waterfall Mist Particle Spray */}
+      <points ref={mistRef}>
         <bufferGeometry>
           <bufferAttribute
             attach="attributes-position"
@@ -254,10 +217,10 @@ function WaterfallAndRiver() {
           />
         </bufferGeometry>
         <pointsMaterial
-          size={0.06}
-          color="#E8FAF8"
+          size={0.07}
+          color={isDark ? '#C4FAF6' : '#E8FAF8'}
           transparent
-          opacity={0.6}
+          opacity={isDark ? 0.45 : 0.65}
           depthWrite={false}
         />
       </points>
@@ -265,8 +228,8 @@ function WaterfallAndRiver() {
   )
 }
 
-// 4. Explorer Robot (Cute, Sophisticated Research Rover with Camera Eye & Antenna)
-function ExplorerRobot({ isHovered }) {
+// 3. Explorer Robot (Main Character): Cute, High-End Research Machine
+function ExplorerRobot({ isHovered, isDark }) {
   const robotGroupRef = useRef()
   const headRef = useRef()
   const antennaRef = useRef()
@@ -276,99 +239,95 @@ function ExplorerRobot({ isHovered }) {
     const t = state.clock.getElapsedTime()
     const { x, y } = state.pointer
 
-    // Gentle robot breathing & idle curiosity
+    // Gentle robot breathing & curious idle posture
     if (robotGroupRef.current) {
-      robotGroupRef.current.position.y = 0.08 + Math.sin(t * 1.8) * 0.02
+      robotGroupRef.current.position.y = 0.12 + Math.sin(t * 1.8) * 0.018
     }
 
-    // Head smooth tracking toward cursor & periodic curiosity look-around
+    // Swivel head smoothly tracks pointer / looks around environment
     if (headRef.current) {
-      const targetRotY = THREE.MathUtils.clamp(x * 0.7 + Math.sin(t * 0.5) * 0.25, -0.8, 0.8)
+      const targetRotY = THREE.MathUtils.clamp(x * 0.75 + Math.sin(t * 0.5) * 0.25, -0.85, 0.85)
       const targetRotX = THREE.MathUtils.clamp(-y * 0.4 + Math.sin(t * 0.8) * 0.1, -0.4, 0.4)
 
-      headRef.current.rotation.y = THREE.MathUtils.lerp(headRef.current.rotation.y, targetRotY, 0.05)
-      headRef.current.rotation.x = THREE.MathUtils.lerp(headRef.current.rotation.x, targetRotX, 0.05)
+      headRef.current.rotation.y = THREE.MathUtils.lerp(headRef.current.rotation.y, targetRotY, 0.06)
+      headRef.current.rotation.x = THREE.MathUtils.lerp(headRef.current.rotation.x, targetRotX, 0.06)
     }
 
-    // Antenna subtle twitch
+    // Antenna subtle movement
     if (antennaRef.current) {
-      antennaRef.current.rotation.z = Math.sin(t * 4) * 0.08
+      antennaRef.current.rotation.z = Math.sin(t * 3.8) * 0.09
     }
 
-    // Eye pulse
+    // Optical eye light intensity
     if (eyeLightRef.current) {
-      eyeLightRef.current.intensity = 0.9 + Math.sin(t * 3) * 0.3 + (isHovered ? 0.6 : 0)
+      eyeLightRef.current.intensity = 1.0 + Math.sin(t * 2.8) * 0.35 + (isHovered ? 0.7 : 0)
     }
   })
 
+  const chassisColor = isDark ? '#1F2630' : '#FAFBF9'
+  const metalColor = isDark ? '#4A5568' : '#D4DAE8'
+  const accentColor = isDark ? '#4DE1D3' : '#22C7C2'
+
   return (
-    // Perched curiously on the left riverbank looking toward the water & mountain
-    <group ref={robotGroupRef} position={[-0.85, 0.08, 0.45]} rotation={[0, 0.65, 0]}>
-      {/* Robot Chassis Body (Pearl White & Soft Silver) */}
-      <mesh position={[0, 0.28, 0]} castShadow>
-        <cylinderGeometry args={[0.22, 0.26, 0.32, 24]} />
+    // Perched curiously on the left riverbank looking toward the flowing water & mountain
+    <group ref={robotGroupRef} position={[-0.95, 0.12, 0.5]} rotation={[0, 0.68, 0]}>
+      {/* Robot Chassis Body */}
+      <mesh position={[0, 0.3, 0]} castShadow>
+        <cylinderGeometry args={[0.22, 0.26, 0.32, 28]} />
         <meshStandardMaterial
-          color="#FAFAF7"
-          metalness={0.3}
+          color={chassisColor}
+          metalness={isDark ? 0.6 : 0.25}
           roughness={0.2}
         />
       </mesh>
 
-      {/* Energy Core Belt / Chassis Accent Ring */}
-      <mesh position={[0, 0.24, 0]}>
-        <cylinderGeometry args={[0.27, 0.27, 0.05, 24]} />
+      {/* Energy Core Belt */}
+      <mesh position={[0, 0.26, 0]}>
+        <cylinderGeometry args={[0.27, 0.27, 0.05, 28]} />
         <meshStandardMaterial
-          color="#35D6D0"
-          emissive="#35D6D0"
-          emissiveIntensity={0.6}
+          color={accentColor}
+          emissive={accentColor}
+          emissiveIntensity={isDark ? 0.8 : 0.55}
           roughness={0.15}
         />
       </mesh>
 
-      {/* Research Backpack / Battery Unit */}
-      <mesh position={[0, 0.28, -0.22]} castShadow>
+      {/* Research Backpack Unit */}
+      <mesh position={[0, 0.3, -0.22]} castShadow>
         <boxGeometry args={[0.24, 0.26, 0.12]} />
-        <meshStandardMaterial
-          color="#D4DAE8"
-          metalness={0.5}
-          roughness={0.25}
-        />
+        <meshStandardMaterial color={metalColor} metalness={0.7} roughness={0.25} />
       </mesh>
 
-      {/* Swivel Head Group */}
-      <group ref={headRef} position={[0, 0.5, 0]}>
-        {/* Head Shell */}
+      {/* Swivel Head */}
+      <group ref={headRef} position={[0, 0.52, 0]}>
+        {/* Head Dome */}
         <mesh castShadow>
-          <sphereGeometry args={[0.2, 24, 24]} />
+          <sphereGeometry args={[0.2, 28, 28]} />
           <meshStandardMaterial
-            color="#FAFAF7"
-            metalness={0.25}
-            roughness={0.15}
+            color={chassisColor}
+            metalness={isDark ? 0.5 : 0.25}
+            roughness={0.18}
           />
         </mesh>
 
-        {/* Camera / Eye Bezel */}
+        {/* Optical Camera Bezel */}
         <mesh position={[0, 0.02, 0.17]} rotation={[Math.PI / 2, 0, 0]}>
-          <cylinderGeometry args={[0.09, 0.09, 0.06, 24]} />
-          <meshStandardMaterial
-            color="#232731"
-            metalness={0.8}
-            roughness={0.2}
-          />
+          <cylinderGeometry args={[0.09, 0.09, 0.06, 28]} />
+          <meshStandardMaterial color="#101318" metalness={0.8} roughness={0.2} />
         </mesh>
 
-        {/* Luminous Optical Lens (Glowing Aqua Eye) */}
+        {/* Glowing Camera Lens Eye */}
         <mesh position={[0, 0.02, 0.21]}>
           <sphereGeometry args={[0.06, 16, 16]} />
-          <meshBasicMaterial color="#35D6D0" />
+          <meshBasicMaterial color={accentColor} />
         </mesh>
 
         <pointLight
           ref={eyeLightRef}
-          position={[0, 0.02, 0.3]}
-          distance={1.5}
-          color="#35D6D0"
-          intensity={1.0}
+          position={[0, 0.02, 0.32]}
+          distance={1.6}
+          color={accentColor}
+          intensity={1.1}
         />
 
         {/* Antenna */}
@@ -380,216 +339,203 @@ function ExplorerRobot({ isHovered }) {
           <mesh position={[0, 0.24, 0]}>
             <sphereGeometry args={[0.035, 12, 12]} />
             <meshStandardMaterial
-              color="#A994FF"
-              emissive="#A994FF"
-              emissiveIntensity={0.8}
+              color="#9B8AFB"
+              emissive="#9B8AFB"
+              emissiveIntensity={isDark ? 1.0 : 0.75}
             />
           </mesh>
         </group>
       </group>
 
-      {/* Mechanical Articulated Legs / Wheels Platform */}
-      {/* Left Leg */}
-      <group position={[-0.15, 0.05, 0]}>
+      {/* Articulated Mechanical Feet */}
+      <group position={[-0.15, 0.06, 0]}>
         <mesh position={[0, 0.06, 0]}>
           <cylinderGeometry args={[0.035, 0.035, 0.18, 8]} />
-          <meshStandardMaterial color="#8A92A6" metalness={0.6} />
+          <meshStandardMaterial color="#6B7280" metalness={0.6} />
         </mesh>
-        {/* Foot Pad */}
         <mesh position={[0, -0.02, 0.03]}>
           <boxGeometry args={[0.1, 0.04, 0.16]} />
-          <meshStandardMaterial color="#5D626D" metalness={0.5} roughness={0.3} />
+          <meshStandardMaterial color="#374151" metalness={0.5} roughness={0.3} />
         </mesh>
       </group>
-
-      {/* Right Leg */}
-      <group position={[0.15, 0.05, 0]}>
+      <group position={[0.15, 0.06, 0]}>
         <mesh position={[0, 0.06, 0]}>
           <cylinderGeometry args={[0.035, 0.035, 0.18, 8]} />
-          <meshStandardMaterial color="#8A92A6" metalness={0.6} />
+          <meshStandardMaterial color="#6B7280" metalness={0.6} />
         </mesh>
-        {/* Foot Pad */}
         <mesh position={[0, -0.02, 0.03]}>
           <boxGeometry args={[0.1, 0.04, 0.16]} />
-          <meshStandardMaterial color="#5D626D" metalness={0.5} roughness={0.3} />
+          <meshStandardMaterial color="#374151" metalness={0.5} roughness={0.3} />
         </mesh>
       </group>
     </group>
   )
 }
 
-// 4b. Tiny Futuristic Explorer Beacon & Mini Holographic Display Panel
-function FuturisticElements() {
+// 4. Subtle Futuristic Tech Elements: Floating Transparent Holographic Sensor & Energy Beacon
+function SubtleTechElements({ isDark }) {
   const holoRef = useRef()
   const beaconRef = useRef()
 
   useFrame((state) => {
     const t = state.clock.getElapsedTime()
     if (holoRef.current) {
-      holoRef.current.position.y = 0.58 + Math.sin(t * 2.2) * 0.04
+      holoRef.current.position.y = 0.62 + Math.sin(t * 2.2) * 0.035
       holoRef.current.rotation.y = t * 0.4
     }
     if (beaconRef.current) {
-      beaconRef.current.rotation.y = t * 0.6
+      beaconRef.current.rotation.y = t * 0.65
     }
   })
 
+  const aquaColor = isDark ? '#4DE1D3' : '#22C7C2'
+
   return (
     <group>
-      {/* Tiny floating translucent holographic data panel floating near robot */}
-      <group ref={holoRef} position={[-0.48, 0.58, 0.6]}>
+      {/* Tiny holographic glass sensor wafer floating near explorer robot */}
+      <group ref={holoRef} position={[-0.52, 0.62, 0.65]}>
         <mesh>
           <planeGeometry args={[0.22, 0.14]} />
           <meshPhysicalMaterial
-            color="#35D6D0"
-            transmission={0.8}
+            color={aquaColor}
+            transmission={0.85}
             roughness={0.1}
             transparent
             opacity={0.7}
             side={THREE.DoubleSide}
           />
         </mesh>
-        {/* Subtle glowing marker dot on holo wafer */}
         <mesh position={[0, 0, 0.005]}>
           <circleGeometry args={[0.02, 12]} />
-          <meshBasicMaterial color="#FAFAF7" />
+          <meshBasicMaterial color={isDark ? '#F2F6F4' : '#101318'} />
         </mesh>
       </group>
 
       {/* Tiny energy beacon marker on riverbank rock */}
-      <group ref={beaconRef} position={[0.55, 0.42, 0.4]}>
+      <group ref={beaconRef} position={[0.62, 0.45, 0.45]}>
         <mesh>
-          <octahedronGeometry args={[0.06, 0]} />
+          <octahedronGeometry args={[0.065, 0]} />
           <meshStandardMaterial
-            color="#35D6D0"
-            emissive="#35D6D0"
-            emissiveIntensity={1.2}
+            color={aquaColor}
+            emissive={aquaColor}
+            emissiveIntensity={isDark ? 1.4 : 1.1}
             roughness={0.2}
           />
         </mesh>
-        <pointLight distance={1.2} color="#35D6D0" intensity={0.6} />
+        <pointLight distance={1.4} color={aquaColor} intensity={0.7} />
       </group>
     </group>
   )
 }
 
-// 5. Stylized Floating Cumulus Clouds
-function Clouds() {
+// 5. Stylized Translucent Clouds
+function Clouds({ isDark }) {
   const cloudsRef = useRef()
 
   useFrame((state) => {
     const t = state.clock.getElapsedTime()
     if (cloudsRef.current) {
-      cloudsRef.current.position.x = Math.sin(t * 0.1) * 0.3
+      cloudsRef.current.position.x = Math.sin(t * 0.1) * 0.35
     }
   })
 
+  const cloudColor = isDark ? '#C5D6E8' : '#FFFFFF'
+  const cloudOpacity = isDark ? 0.75 : 0.88
+
   return (
-    <group ref={cloudsRef} position={[0, 1.8, 0]}>
+    <group ref={cloudsRef} position={[0, 2.1, -0.4]}>
       {/* Cloud 1 (Left-Mid) */}
-      <group position={[-1.6, 0.3, -0.5]}>
+      <group position={[-1.7, 0.25, -0.6]}>
         <mesh position={[0, 0, 0]}>
-          <sphereGeometry args={[0.38, 16, 16]} />
-          <meshStandardMaterial color="#FFFFFF" roughness={0.5} transparent opacity={0.88} />
+          <sphereGeometry args={[0.42, 16, 16]} />
+          <meshStandardMaterial color={cloudColor} roughness={0.5} transparent opacity={cloudOpacity} />
         </mesh>
-        <mesh position={[0.3, -0.05, 0]}>
+        <mesh position={[0.32, -0.05, 0]}>
+          <sphereGeometry args={[0.3, 16, 16]} />
+          <meshStandardMaterial color={cloudColor} roughness={0.5} transparent opacity={cloudOpacity} />
+        </mesh>
+        <mesh position={[-0.3, -0.06, 0]}>
           <sphereGeometry args={[0.28, 16, 16]} />
-          <meshStandardMaterial color="#FFFFFF" roughness={0.5} transparent opacity={0.88} />
-        </mesh>
-        <mesh position={[-0.28, -0.06, 0]}>
-          <sphereGeometry args={[0.26, 16, 16]} />
-          <meshStandardMaterial color="#FFFFFF" roughness={0.5} transparent opacity={0.88} />
+          <meshStandardMaterial color={cloudColor} roughness={0.5} transparent opacity={cloudOpacity} />
         </mesh>
       </group>
 
       {/* Cloud 2 (Upper Right) */}
-      <group position={[1.8, 0.6, -1.2]}>
+      <group position={[1.9, 0.55, -1.3]}>
         <mesh position={[0, 0, 0]}>
-          <sphereGeometry args={[0.42, 16, 16]} />
-          <meshStandardMaterial color="#FFFFFF" roughness={0.5} transparent opacity={0.88} />
+          <sphereGeometry args={[0.46, 16, 16]} />
+          <meshStandardMaterial color={cloudColor} roughness={0.5} transparent opacity={cloudOpacity} />
         </mesh>
-        <mesh position={[-0.32, -0.06, 0]}>
-          <sphereGeometry args={[0.3, 16, 16]} />
-          <meshStandardMaterial color="#FFFFFF" roughness={0.5} transparent opacity={0.88} />
-        </mesh>
-        <mesh position={[0.35, -0.05, 0]}>
+        <mesh position={[-0.34, -0.06, 0]}>
           <sphereGeometry args={[0.32, 16, 16]} />
-          <meshStandardMaterial color="#FFFFFF" roughness={0.5} transparent opacity={0.88} />
+          <meshStandardMaterial color={cloudColor} roughness={0.5} transparent opacity={cloudOpacity} />
+        </mesh>
+        <mesh position={[0.38, -0.05, 0]}>
+          <sphereGeometry args={[0.34, 16, 16]} />
+          <meshStandardMaterial color={cloudColor} roughness={0.5} transparent opacity={cloudOpacity} />
         </mesh>
       </group>
     </group>
   )
 }
 
-// 6. Studio & Natural Golden Daylight Lighting
-function WorldLighting() {
+// 6. Dynamic Natural Lighting: Daylight vs Moonlit Blue-Hour
+function NaturalWorldLighting({ isDark }) {
   return (
     <>
-      {/* Soft Luminous Daylight Ambient */}
-      <ambientLight intensity={1.2} color="#F5F8FF" />
+      {/* Ambient Lighting */}
+      <ambientLight
+        intensity={isDark ? 0.85 : 1.3}
+        color={isDark ? '#1E2838' : '#FFF9F0'}
+      />
 
-      {/* Warm Morning Sunlight Key (Peach / Pale Yellow) */}
+      {/* Key Sun / Moon Light */}
       <directionalLight
-        position={[5, 8, 6]}
-        intensity={2.4}
-        color="#FFF4E6"
+        position={[6, 9, 6]}
+        intensity={isDark ? 1.8 : 2.7}
+        color={isDark ? '#76B7FF' : '#FFF3E0'}
         castShadow
         shadow-mapSize={[1024, 1024]}
       />
 
-      {/* Cool Sky / Aqua Fill Light */}
+      {/* Sky Fill Light */}
       <directionalLight
         position={[-6, 4, 3]}
-        intensity={1.1}
-        color="#D6F4FF"
+        intensity={isDark ? 0.9 : 1.2}
+        color={isDark ? '#1A354E' : '#D4EEFF'}
       />
 
-      {/* Lavender Soft Mountain Rim Light */}
+      {/* Mountain Rim / Horizon Light */}
       <directionalLight
-        position={[0, 5, -7]}
-        intensity={1.4}
-        color="#EAD9FF"
+        position={[0, 6, -8]}
+        intensity={isDark ? 1.2 : 1.4}
+        color={isDark ? '#3A315F' : '#E8DCFF'}
       />
-
-      {/* Soft Contact Shadow beneath island */}
-      <mesh position={[0, -2.4, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[5.5, 5.5]} />
-        <meshBasicMaterial color="#111318" transparent opacity={0.06} />
-      </mesh>
     </>
   )
 }
 
-// 7. Cinematic Camera Drift & Parallax Controller
+// 7. Cinematic Camera Drift & Cursor Parallax
 function CameraController() {
   useFrame((state) => {
     const { x, y } = state.pointer
     const t = state.clock.getElapsedTime()
-    // Gentle cinematic camera drift + cursor parallax
-    const targetX = x * 0.4 + Math.sin(t * 0.2) * 0.08
-    const targetY = 1.8 + y * 0.22 + Math.cos(t * 0.25) * 0.06
+    // Smooth cinematic camera tilt & cursor parallax
+    const targetX = x * 0.45 + Math.sin(t * 0.2) * 0.08
+    const targetY = 1.9 + y * 0.22 + Math.cos(t * 0.25) * 0.06
     state.camera.position.x = THREE.MathUtils.lerp(state.camera.position.x, targetX, 0.04)
     state.camera.position.y = THREE.MathUtils.lerp(state.camera.position.y, targetY, 0.04)
-    state.camera.lookAt(0.15, 0.1, 0)
+    state.camera.lookAt(0.15, 0.15, 0)
   })
   return null
 }
 
 export default function MiniatureWorld() {
+  const { isDark } = useTheme()
   const [isHovered, setIsHovered] = useState(false)
-  const [hasWebGL, setHasWebGL] = useState(true)
   const [isMobile, setIsMobile] = useState(false)
-  const worldGroupRef = useRef()
 
   useEffect(() => {
-    try {
-      const canvas = document.createElement('canvas')
-      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl')
-      if (!gl) setHasWebGL(false)
-    } catch {
-      setHasWebGL(false)
-    }
-
     if (typeof window !== 'undefined') {
       setIsMobile(window.innerWidth < 768)
       const handleResize = () => setIsMobile(window.innerWidth < 768)
@@ -600,12 +546,12 @@ export default function MiniatureWorld() {
 
   return (
     <div
-      className="relative w-full h-[440px] sm:h-[540px] lg:h-[660px] flex items-center justify-center pointer-events-auto"
+      className="relative w-full h-[450px] sm:h-[560px] lg:h-[680px] flex items-center justify-center pointer-events-auto"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <Canvas
-        camera={{ position: [0, 1.8, 4.6], fov: 42 }}
+        camera={{ position: [0, 1.9, 4.8], fov: 42 }}
         dpr={[1, isMobile ? 1.2 : 1.5]}
         gl={{
           antialias: true,
@@ -615,16 +561,15 @@ export default function MiniatureWorld() {
         className="w-full h-full cursor-pointer"
       >
         <Suspense fallback={null}>
-          <fog attach="fog" args={['#F5F8FF', 4.5, 9.5]} />
+          <fog attach="fog" args={[isDark ? '#0B0E12' : '#F7F8F4', 4.5, 9.8]} />
           <CameraController />
-          <WorldLighting />
-          <group ref={worldGroupRef} position={[0.25, -0.1, 0]}>
-            <Mountains />
-            <IslandTerrain />
-            <WaterfallAndRiver />
-            <FuturisticElements />
-            <ExplorerRobot isHovered={isHovered} />
-            <Clouds />
+          <NaturalWorldLighting isDark={isDark} />
+          <group position={[0.2, -0.05, 0]}>
+            <RealisticMountain isDark={isDark} />
+            <RealisticWater isDark={isDark} />
+            <SubtleTechElements isDark={isDark} />
+            <ExplorerRobot isHovered={isHovered} isDark={isDark} />
+            <Clouds isDark={isDark} />
           </group>
         </Suspense>
       </Canvas>

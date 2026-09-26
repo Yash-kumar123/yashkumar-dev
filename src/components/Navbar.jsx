@@ -1,18 +1,22 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Download, Menu, X, ArrowUpRight, Sparkles } from 'lucide-react'
+import { Download, Menu, X, ArrowUpRight } from 'lucide-react'
 import { profile } from '../data/portfolioData'
 import { scrollToTarget } from '../utils/smoothScroll'
+import { useTheme } from '../context/ThemeContext'
+import LiquidLogo from './LiquidLogo'
+import ThemeToggle from './ThemeToggle'
 
 const NAV_ITEMS = [
   { id: 'work', label: 'WORK', target: '#projects' },
   { id: 'about', label: 'ABOUT', target: '#about' },
-  { id: 'philosophy', label: 'HOW I THINK', target: '#philosophy' },
   { id: 'stack', label: 'STACK', target: '#stack' },
   { id: 'achievements', label: 'ACHIEVEMENTS', target: '#achievements' },
+  { id: 'contact', label: 'CONTACT', target: '#contact' },
 ]
 
 export default function Navbar({ activeSection = 'hero' }) {
+  const { isDark } = useTheme()
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
 
@@ -30,48 +34,51 @@ export default function Navbar({ activeSection = 'hero' }) {
   }
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-8 lg:px-12 py-4 transition-all duration-300">
+    <header className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-8 lg:px-12 py-4 transition-all duration-300 pointer-events-none">
       <div
-        className={`max-w-7xl mx-auto flex items-center justify-between px-6 py-3 rounded-full transition-all duration-500 ${
-          scrolled
-            ? 'bg-white/80 backdrop-blur-2xl border border-white/90 shadow-soft-md'
-            : 'bg-white/40 backdrop-blur-md border border-white/60 shadow-soft-sm'
+        className={`max-w-7xl mx-auto flex items-center justify-between px-5 sm:px-6 py-2.5 rounded-full pointer-events-auto transition-all duration-700 ${
+          isDark
+            ? scrolled
+              ? 'bg-[#151B21]/80 backdrop-blur-2xl border border-white/10 shadow-dark-card'
+              : 'bg-[#151B21]/50 backdrop-blur-md border border-white/5'
+            : scrolled
+              ? 'bg-white/85 backdrop-blur-2xl border border-white/90 shadow-soft-md'
+              : 'bg-white/55 backdrop-blur-md border border-white/60 shadow-soft-sm'
         }`}
       >
-        {/* Left: Brand Identity */}
-        <button
-          onClick={() => handleNavClick('#hero')}
-          className="group flex items-center gap-3 text-left focus:outline-none"
-        >
-          <div className="w-8 h-8 rounded-full bg-dark text-white flex items-center justify-center font-display font-bold text-xs group-hover:scale-105 transition-transform duration-300 shadow-sm">
-            YK
-          </div>
-          <div className="flex flex-col">
-            <span className="font-display font-bold text-sm tracking-tight text-dark group-hover:text-sky transition-colors">
-              YASH.K
-            </span>
-            <span className="hidden xl:inline text-[9px] text-dark-muted font-mono tracking-widest uppercase">
-              APPLIED AI · SYSTEMS
-            </span>
-          </div>
-        </button>
+        {/* Left: Brand Identity with Liquid Logo */}
+        <div onClick={() => handleNavClick('#hero')}>
+          <LiquidLogo />
+        </div>
 
         {/* Center: Desktop Navigation Links */}
-        <nav className="hidden lg:flex items-center gap-1 font-mono text-[11px] tracking-wider text-dark-muted">
+        <nav
+          className={`hidden md:flex items-center gap-1 font-mono text-[11px] tracking-wider transition-colors duration-700 ${
+            isDark ? 'text-darktheme-muted' : 'text-light-muted'
+          }`}
+        >
           {NAV_ITEMS.map((item) => {
             const isActive = activeSection === item.id
             return (
               <button
                 key={item.id}
                 onClick={() => handleNavClick(item.target)}
-                className={`px-4 py-1.5 rounded-full transition-all duration-200 relative ${
+                className={`px-3.5 py-1.5 rounded-full transition-all duration-200 relative ${
                   isActive
-                    ? 'text-dark font-semibold bg-black/[0.05]'
-                    : 'hover:text-dark hover:bg-black/[0.03]'
+                    ? isDark
+                      ? 'text-darktheme-text font-semibold bg-white/10'
+                      : 'text-light-text font-semibold bg-black/[0.05]'
+                    : isDark
+                      ? 'hover:text-darktheme-text hover:bg-white/5'
+                      : 'hover:text-light-text hover:bg-black/[0.03]'
                 }`}
               >
                 {isActive && (
-                  <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-3 h-[2px] bg-aqua rounded-full shadow-[0_0_6px_#35D6D0]" />
+                  <span
+                    className={`absolute bottom-1 left-1/2 -translate-x-1/2 w-3 h-[2px] rounded-full ${
+                      isDark ? 'bg-darktheme-aqua shadow-[0_0_8px_#4DE1D3]' : 'bg-light-aqua shadow-[0_0_8px_#22C7C2]'
+                    }`}
+                  />
                 )}
                 {item.label}
               </button>
@@ -79,37 +86,54 @@ export default function Navbar({ activeSection = 'hero' }) {
           })}
         </nav>
 
-        {/* Right: Tactile CONTACT button & Resume download */}
-        <div className="hidden sm:flex items-center gap-3">
+        {/* Right: Theme Toggle & Tactile Action Buttons */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          {/* Day / Night Theme Toggle */}
+          <ThemeToggle />
+
+          {/* Resume Download */}
           <a
             href={profile.resumeUrl}
             download
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[11px] font-mono font-medium text-dark-muted hover:text-dark bg-black/[0.03] border border-black/[0.06] hover:border-black/[0.12] transition-all"
+            className={`hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-mono font-medium transition-all duration-500 ${
+              isDark
+                ? 'text-darktheme-subtext hover:text-darktheme-text bg-white/5 border border-white/10 hover:border-white/20'
+                : 'text-light-subtext hover:text-light-text bg-black/[0.03] border border-black/[0.06] hover:border-black/[0.12]'
+            }`}
           >
             <span>RESUME</span>
             <Download size={12} />
           </a>
 
+          {/* Contact Direct CTA */}
           <button
             onClick={() => handleNavClick('#contact')}
-            className="group flex items-center gap-2 px-5 py-2 rounded-full text-[11px] font-mono font-semibold tracking-wider bg-dark text-white hover:bg-sky transition-all duration-300 shadow-soft-sm hover:shadow-soft-md"
+            className={`hidden lg:flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-mono font-semibold tracking-wider transition-all duration-300 shadow-soft-sm ${
+              isDark
+                ? 'bg-darktheme-aqua text-black hover:bg-darktheme-sky'
+                : 'bg-dark text-white hover:bg-light-sky'
+            }`}
           >
-            <span>CONTACT</span>
-            <ArrowUpRight size={13} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+            <span>CONNECT</span>
+            <ArrowUpRight size={13} />
+          </button>
+
+          {/* Mobile Hamburger Toggle */}
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className={`md:hidden p-2 rounded-full transition-colors ${
+              isDark
+                ? 'text-darktheme-text bg-white/5 border border-white/10'
+                : 'text-light-text bg-black/[0.04] border border-black/[0.06]'
+            }`}
+            aria-label="Toggle Navigation Menu"
+          >
+            {mobileOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
         </div>
-
-        {/* Mobile Hamburger Toggle */}
-        <button
-          onClick={() => setMobileOpen(!mobileOpen)}
-          className="lg:hidden p-2 rounded-full text-dark bg-black/[0.04] border border-black/[0.06]"
-          aria-label="Toggle Navigation Menu"
-        >
-          {mobileOpen ? <X size={20} /> : <Menu size={20} />}
-        </button>
       </div>
 
-      {/* Fullscreen Clean Light Mobile Navigation */}
+      {/* Fullscreen Mobile Drawer with Theme Awareness */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
@@ -117,66 +141,58 @@ export default function Navbar({ activeSection = 'hero' }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -15 }}
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-0 z-40 bg-cream/98 backdrop-blur-3xl flex flex-col justify-between p-8 sm:p-12 lg:hidden font-mono"
+            className={`fixed inset-0 z-40 flex flex-col justify-between p-8 sm:p-12 md:hidden font-mono pointer-events-auto transition-colors duration-700 ${
+              isDark ? 'bg-darktheme-bg/98 text-darktheme-text backdrop-blur-3xl' : 'bg-light-bg/98 text-light-text backdrop-blur-3xl'
+            }`}
           >
-            {/* Top Bar inside modal */}
-            <div className="flex items-center justify-between border-b border-black/[0.08] pb-6">
+            {/* Top drawer bar */}
+            <div className="flex items-center justify-between border-b border-black/[0.08] dark:border-white/10 pb-6">
+              <LiquidLogo />
               <div className="flex items-center gap-3">
-                <span className="w-8 h-8 rounded-full bg-dark text-white flex items-center justify-center font-display font-bold text-xs">
-                  YK
-                </span>
-                <span className="font-display font-bold text-base text-dark">YASH KUMAR</span>
+                <ThemeToggle />
+                <button
+                  onClick={() => setMobileOpen(false)}
+                  className={`p-2.5 rounded-full ${
+                    isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-dark'
+                  }`}
+                >
+                  <X size={20} />
+                </button>
               </div>
-              <button
-                onClick={() => setMobileOpen(false)}
-                className="p-2.5 rounded-full bg-black/[0.04] border border-black/[0.08] text-dark"
-              >
-                <X size={20} />
-              </button>
             </div>
 
-            {/* Middle: Editorial Oversized Links */}
-            <div className="my-auto space-y-4">
+            {/* Nav links */}
+            <div className="flex flex-col gap-5 py-8">
               {NAV_ITEMS.map((item, index) => (
                 <button
                   key={item.id}
                   onClick={() => handleNavClick(item.target)}
-                  className="w-full flex items-center justify-between text-left py-2 group border-b border-black/[0.04]"
+                  className="text-left text-2xl sm:text-3xl font-display font-bold tracking-tight hover:text-aqua transition-colors flex items-center justify-between"
                 >
-                  <span className="font-display text-3xl sm:text-5xl font-black tracking-tight text-dark-muted group-hover:text-dark transition-colors">
-                    {item.label}
-                  </span>
-                  <span className="font-mono text-xs text-sky opacity-0 group-hover:opacity-100 transition-opacity">
-                    0{index + 1} ↗
-                  </span>
+                  <span>{item.label}</span>
+                  <span className="text-xs font-mono opacity-40">0{index + 1}</span>
                 </button>
               ))}
-
-              <button
-                onClick={() => handleNavClick('#contact')}
-                className="w-full flex items-center justify-between text-left py-2 group border-b border-black/[0.04]"
-              >
-                <span className="font-display text-3xl sm:text-5xl font-black tracking-tight text-sky">
-                  CONTACT
-                </span>
-                <ArrowUpRight size={24} className="text-sky" />
-              </button>
             </div>
 
-            {/* Bottom: Status & Resume */}
-            <div className="border-t border-black/[0.08] pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-dark-muted">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-mint animate-pulse" />
-                <span className="text-dark font-medium">AVAILABLE FOR OPPORTUNITIES · 2026</span>
-              </div>
+            {/* Bottom Actions */}
+            <div className="pt-6 border-t border-black/[0.08] dark:border-white/10 flex flex-col gap-3 text-xs">
               <a
                 href={profile.resumeUrl}
                 download
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-dark text-white font-semibold shadow-soft-sm"
+                className="flex items-center justify-center gap-2 py-3.5 rounded-full border border-black/10 dark:border-white/15 font-semibold"
               >
-                <Download size={13} />
+                <Download size={14} />
                 <span>DOWNLOAD RESUME</span>
               </a>
+              <button
+                onClick={() => handleNavClick('#contact')}
+                className={`py-3.5 rounded-full font-semibold ${
+                  isDark ? 'bg-darktheme-aqua text-black' : 'bg-dark text-white'
+                }`}
+              >
+                LET'S TALK
+              </button>
             </div>
           </motion.div>
         )}

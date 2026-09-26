@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowUpRight, Github, Activity, ChevronDown, Sparkles } from 'lucide-react'
+import { ArrowUpRight, Github, Activity, ChevronDown } from 'lucide-react'
 import { projects } from '../data/portfolioData'
 import ArchitectureModal from './ArchitectureModal'
 import {
@@ -30,10 +30,10 @@ function ProjectEditorialCard({ project, index, onOpenArchitecture }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-60px' }}
       transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-      className="p-8 sm:p-12 lg:p-14 rounded-4xl glass-bright hover:shadow-soft-xl transition-all duration-500 relative group overflow-hidden"
+      className="p-8 sm:p-12 lg:p-14 rounded-4xl glass-panel hover:shadow-soft-xl transition-all duration-500 relative group overflow-hidden"
     >
       <div className={`grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center relative z-10`}>
-        {/* Visual Mockup Container (5 Columns) - Asymmetrically placed */}
+        {/* Visual Mockup Container (5 Columns) */}
         <div
           onClick={() => onOpenArchitecture(project)}
           className={`h-[300px] sm:h-[340px] rounded-3xl cursor-pointer hover:scale-[1.01] transition-transform duration-500 lg:col-span-5 ${
@@ -46,22 +46,22 @@ function ProjectEditorialCard({ project, index, onOpenArchitecture }) {
         {/* Narrative & Controls (7 Columns) */}
         <div className={`space-y-6 lg:col-span-7 ${isReversed ? 'lg:order-1' : 'lg:order-2'}`}>
           {/* Top Identifier & Date */}
-          <div className="flex items-center gap-3 font-mono text-xs text-dark-muted">
-            <span className="text-sky font-bold tracking-widest text-sm">
+          <div className="flex items-center gap-3 font-mono text-xs text-light-muted dark:text-darktheme-muted">
+            <span className="text-light-sky dark:text-darktheme-sky font-bold tracking-widest text-sm">
               0{index + 1}
             </span>
-            <span className="w-8 h-[1px] bg-black/[0.1]" />
+            <span className="w-8 h-[1px] bg-black/[0.1] dark:bg-white/10" />
             <span className="uppercase tracking-wider">{project.date}</span>
-            <span className="text-black/15">•</span>
-            <span className="text-dark font-semibold">{project.subtitle}</span>
+            <span className="text-black/15 dark:text-white/15">•</span>
+            <span className="text-light-text dark:text-darktheme-text font-semibold">{project.subtitle}</span>
           </div>
 
           {/* Project Title */}
           <div>
-            <h3 className="font-display text-3xl sm:text-4xl md:text-5xl font-black text-dark tracking-tight">
+            <h3 className="font-display text-3xl sm:text-4xl md:text-5xl font-black text-light-text dark:text-darktheme-text tracking-tight transition-colors">
               {project.name}
             </h3>
-            <p className="mt-3 text-dark-muted text-sm sm:text-base font-sans leading-relaxed tracking-tight">
+            <p className="mt-3 text-light-muted dark:text-darktheme-muted text-sm sm:text-base font-sans leading-relaxed tracking-tight transition-colors">
               {project.tagline || project.description}
             </p>
           </div>
@@ -71,7 +71,7 @@ function ProjectEditorialCard({ project, index, onOpenArchitecture }) {
             {project.stack.map((tech) => (
               <span
                 key={tech}
-                className="px-3.5 py-1.5 rounded-full font-mono text-xs bg-white border border-black/[0.08] text-dark shadow-soft-sm"
+                className="px-3.5 py-1.5 rounded-full font-mono text-xs bg-white/90 dark:bg-white/5 border border-black/[0.08] dark:border-white/10 text-light-text dark:text-darktheme-text shadow-soft-sm"
               >
                 {tech}
               </span>
@@ -85,7 +85,7 @@ function ProjectEditorialCard({ project, index, onOpenArchitecture }) {
                 href={project.liveUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-mono text-xs font-semibold tracking-wider bg-dark text-white hover:bg-sky transition-all duration-300 shadow-soft-sm hover:shadow-soft-md"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-mono text-xs font-semibold tracking-wider bg-dark text-white hover:bg-light-sky dark:bg-darktheme-aqua dark:text-black dark:hover:bg-darktheme-sky transition-all duration-300 shadow-soft-sm hover:shadow-soft-md"
               >
                 <span>LIVE DEMO</span>
                 <ArrowUpRight size={13} />
@@ -97,7 +97,7 @@ function ProjectEditorialCard({ project, index, onOpenArchitecture }) {
                 href={project.repoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-full font-mono text-xs font-medium text-dark bg-white border border-black/[0.1] hover:border-black/[0.25] transition-all shadow-soft-sm"
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-full font-mono text-xs font-medium text-light-text dark:text-darktheme-text bg-white/90 dark:bg-white/5 border border-black/[0.1] dark:border-white/10 hover:border-black/[0.25] dark:hover:border-white/30 transition-all shadow-soft-sm"
               >
                 <Github size={13} />
                 <span>CODE</span>
@@ -106,7 +106,7 @@ function ProjectEditorialCard({ project, index, onOpenArchitecture }) {
 
             <button
               onClick={() => onOpenArchitecture(project)}
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-full font-mono text-xs font-semibold text-sky bg-sky-light border border-sky/30 hover:bg-sky hover:text-white transition-all shadow-soft-sm"
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-full font-mono text-xs font-semibold text-light-sky dark:text-darktheme-sky bg-light-sky/10 dark:bg-darktheme-sky/10 border border-light-sky/30 dark:border-darktheme-sky/30 hover:bg-light-sky dark:hover:bg-darktheme-sky hover:text-white dark:hover:text-black transition-all shadow-soft-sm"
             >
               <Activity size={13} />
               <span>SYSTEM ARCHITECTURE</span>
@@ -114,7 +114,7 @@ function ProjectEditorialCard({ project, index, onOpenArchitecture }) {
 
             <button
               onClick={() => setExpanded(!expanded)}
-              className="inline-flex items-center gap-1.5 font-mono text-xs text-dark-muted hover:text-dark transition-colors py-2 px-2"
+              className="inline-flex items-center gap-1.5 font-mono text-xs text-light-muted dark:text-darktheme-muted hover:text-light-text dark:hover:text-darktheme-text transition-colors py-2 px-2"
             >
               <span>{expanded ? 'LESS DETAILS' : 'ENGINEERING NOTES'}</span>
               <ChevronDown
@@ -132,11 +132,11 @@ function ProjectEditorialCard({ project, index, onOpenArchitecture }) {
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.3 }}
-                className="overflow-hidden border-t border-black/[0.08] pt-5 mt-4 space-y-2.5 font-sans text-xs sm:text-sm text-dark-muted"
+                className="overflow-hidden border-t border-black/[0.08] dark:border-white/10 pt-5 mt-4 space-y-2.5 font-sans text-xs sm:text-sm text-light-muted dark:text-darktheme-muted"
               >
                 {project.bullets.map((b, i) => (
                   <div key={i} className="flex items-start gap-2.5">
-                    <span className="w-2 h-2 rounded-full bg-sky shrink-0 mt-1.5" />
+                    <span className="w-2 h-2 rounded-full bg-light-sky dark:bg-darktheme-sky shrink-0 mt-1.5" />
                     <span className="leading-relaxed">{b}</span>
                   </div>
                 ))}
@@ -153,21 +153,21 @@ export default function Projects() {
   const [selectedArchProject, setSelectedArchProject] = useState(null)
 
   return (
-    <section id="projects" className="relative py-28 sm:py-36 px-6 sm:px-10 lg:px-16 border-t border-black/[0.06] bg-cream/70">
+    <section id="projects" className="relative py-28 sm:py-36 px-6 sm:px-10 lg:px-16 border-t border-black/[0.06] dark:border-white/[0.08] transition-colors duration-700">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
           <div>
-            <div className="flex items-center gap-3 font-mono text-xs text-sky tracking-[0.25em] uppercase mb-3">
-              <span className="text-dark font-bold">04 / SELECTED WORK</span>
-              <span className="w-8 h-[2px] bg-sky/60" />
+            <div className="flex items-center gap-3 font-mono text-xs text-light-sky dark:text-darktheme-sky tracking-[0.25em] uppercase mb-3 transition-colors duration-700">
+              <span className="text-light-text dark:text-darktheme-text font-bold">04 / SELECTED WORK</span>
+              <span className="w-8 h-[2px] bg-light-sky/60 dark:bg-darktheme-sky/60" />
               <span>PRODUCTION SYSTEMS</span>
             </div>
-            <h2 className="font-display text-4xl sm:text-6xl md:text-7xl font-black tracking-tightest text-dark uppercase">
+            <h2 className="font-display text-4xl sm:text-6xl md:text-7xl font-black tracking-tightest text-light-text dark:text-darktheme-text uppercase transition-colors duration-700">
               SELECTED<br />WORK
             </h2>
           </div>
-          <p className="text-sm sm:text-base text-dark-muted max-w-md font-sans leading-relaxed">
+          <p className="text-sm sm:text-base text-light-muted dark:text-darktheme-muted max-w-md font-sans leading-relaxed transition-colors duration-700">
             Five production systems engineered for real-time multiplayer collaboration, multi-tenant RBAC isolation, and acoustic intelligence.
           </p>
         </div>

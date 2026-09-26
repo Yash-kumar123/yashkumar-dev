@@ -3,26 +3,44 @@
 @tailwind utilities;
 
 :root {
-  --bg-cream: #FAFAF7;
-  --bg-soft: #F4F5F2;
-  --text-dark: #111318;
-  --text-secondary: #5D626D;
-  --aqua: #35D6D0;
-  --sky: #5BA8FF;
-  --mint: #78E5B1;
-  --lime: #C6F36B;
-  --coral: #FF7F70;
-  --peach: #FFB68A;
-  --lavender: #A994FF;
+  --bg-primary: #F7F8F4;
+  --bg-secondary: #EEF5F2;
+  --bg-surface: #FFFFFF;
+  --bg-elevated: #FFFFFF;
+  --text-primary: #101318;
+  --text-secondary: #4F5863;
+  --text-muted: #7A838C;
+  --accent-aqua: #22C7C2;
+  --accent-sky: #4F9CFF;
+  --accent-mint: #71D7A4;
+  --accent-lavender: #9B8AFB;
+  --accent-peach: #FFAA83;
+  --accent-sunlight: #FFD978;
+}
+
+html.dark {
+  --bg-primary: #0B0E12;
+  --bg-secondary: #10151A;
+  --bg-surface: #151B21;
+  --bg-elevated: #1B2229;
+  --text-primary: #F2F6F4;
+  --text-secondary: #B5C0C5;
+  --text-muted: #7E8A92;
+  --accent-aqua: #4DE1D3;
+  --accent-mint: #8CE6B4;
+  --accent-sky: #76B7FF;
+  --accent-lavender: #A99BFF;
+  --accent-peach: #FFAD8F;
 }
 
 html {
-  background-color: #FAFAF7;
-  color: #111318;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.75s cubic-bezier(0.16, 1, 0.3, 1), color 0.75s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 html.lenis, html.lenis body {
@@ -46,80 +64,115 @@ html.lenis, html.lenis body {
 }
 
 body {
-  background-color: #FAFAF7;
-  color: #111318;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   overflow-x: hidden;
   margin: 0;
   padding: 0;
-  cursor: auto !important; /* Explicit normal browser cursor */
+  cursor: auto !important; /* Explicit standard browser cursor */
+  transition: background-color 0.75s cubic-bezier(0.16, 1, 0.3, 1), color 0.75s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 ::selection {
-  background: #C6F36B;
-  color: #111318;
+  background: var(--accent-aqua);
+  color: #101318;
 }
 
 ::-webkit-scrollbar {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #FAFAF7;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #D9DED6;
+  background: rgba(122, 131, 140, 0.3);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #B8BFB3;
+  background: rgba(122, 131, 140, 0.5);
 }
 
-/* Subtle Bright Grid */
-.bright-grid {
+/* Subtle Bright / Dark Grid */
+.theme-grid {
   background-size: 56px 56px;
   background-image: 
-    linear-gradient(to right, rgba(17, 19, 24, 0.035) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(17, 19, 24, 0.035) 1px, transparent 1px);
+    linear-gradient(to right, rgba(16, 19, 24, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(16, 19, 24, 0.035) 1px, transparent 1px);
+}
+.dark .theme-grid {
+  background-image: 
+    linear-gradient(to right, rgba(242, 246, 244, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(242, 246, 244, 0.03) 1px, transparent 1px);
 }
 
-.bright-dots {
+.theme-dots {
   background-size: 28px 28px;
-  background-image: radial-gradient(rgba(17, 19, 24, 0.06) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(16, 19, 24, 0.06) 1px, transparent 1px);
+}
+.dark .theme-dots {
+  background-image: radial-gradient(rgba(242, 246, 244, 0.05) 1px, transparent 1px);
 }
 
-/* Premium Bright Glass Cards */
-.glass-bright {
+/* Liquid Glass Cards for Light and Dark Modes */
+.glass-panel {
   background: rgba(255, 255, 255, 0.72);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  box-shadow: 0 10px 40px -10px rgba(17, 19, 24, 0.05), 0 1px 3px rgba(17, 19, 24, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 10px 40px -10px rgba(16, 19, 24, 0.05), 0 1px 3px rgba(16, 19, 24, 0.02);
+  transition: all 0.75s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.glass-bright-interactive {
+.dark .glass-panel {
+  background: rgba(21, 27, 33, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(255, 255, 255, 0.03);
+}
+
+.glass-panel-interactive {
   background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  box-shadow: 0 10px 35px -10px rgba(17, 19, 24, 0.06);
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 10px 35px -10px rgba(16, 19, 24, 0.06);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.75s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.75s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.glass-bright-interactive:hover {
-  background: rgba(255, 255, 255, 0.92);
+.dark .glass-panel-interactive {
+  background: rgba(21, 27, 33, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 35px -10px rgba(0, 0, 0, 0.4);
+}
+
+.glass-panel-interactive:hover {
   transform: translateY(-3px);
-  box-shadow: 0 20px 50px -12px rgba(17, 19, 24, 0.12), 0 0 30px rgba(53, 214, 208, 0.15);
+  box-shadow: 0 20px 50px -12px rgba(16, 19, 24, 0.12), 0 0 30px rgba(34, 199, 194, 0.15);
 }
 
-/* Iridescent Text Gradient */
+.dark .glass-panel-interactive:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.6), 0 0 30px rgba(77, 225, 211, 0.12);
+  border-color: rgba(77, 225, 211, 0.25);
+}
+
+/* Gradient text helpers */
 .text-iridescent {
-  background: linear-gradient(135deg, #111318 30%, #5BA8FF 70%, #35D6D0 100%);
+  background: linear-gradient(135deg, #101318 30%, #4F9CFF 70%, #22C7C2 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.dark .text-iridescent {
+  background: linear-gradient(135deg, #F2F6F4 30%, #76B7FF 70%, #4DE1D3 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
 .text-gradient-warm {
-  background: linear-gradient(135deg, #FF7F70 0%, #FFB68A 50%, #A994FF 100%);
+  background: linear-gradient(135deg, #FFAA83 0%, #FFD0B8 50%, #9B8AFB 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;

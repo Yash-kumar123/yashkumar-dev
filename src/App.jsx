@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import { initSmoothScroll } from './utils/smoothScroll'
+import { ThemeProvider } from './context/ThemeContext'
 
 import LoadingScreen from './components/LoadingScreen'
 import ShaderAtmosphere from './components/three/ShaderAtmosphere'
@@ -25,7 +26,7 @@ const SECTIONS = [
   { id: 'contact', navId: 'contact' },
 ]
 
-export default function App() {
+function MainApp() {
   const [loading, setLoading] = useState(true)
   const [activeSection, setActiveSection] = useState('hero')
 
@@ -62,16 +63,16 @@ export default function App() {
   }, [loading])
 
   return (
-    <div className="min-h-screen bg-cream text-dark font-sans selection:bg-lime selection:text-dark relative antialiased">
-      {/* Short 1-Second Luminous Opening Sequence */}
+    <div className="min-h-screen bg-light-bg dark:bg-darktheme-bg text-light-text dark:text-darktheme-text font-sans relative antialiased transition-colors duration-700 ease-in-out">
+      {/* Short 1-Second Opening Sequence */}
       <AnimatePresence mode="wait">
         {loading && <LoadingScreen key="loader" onComplete={() => setLoading(false)} />}
       </AnimatePresence>
 
-      {/* Multi-State Shader Gradient Atmosphere */}
+      {/* Multi-State Day/Night Shader Gradient Atmosphere */}
       <ShaderAtmosphere />
 
-      {/* Floating Light Navigation */}
+      {/* Floating Light/Dark Navigation */}
       <Navbar activeSection={activeSection} />
 
       {/* Top Status & Metrics Bar */}
@@ -92,5 +93,13 @@ export default function App() {
 
       <Footer />
     </div>
+  )
+}
+
+export default function App() {
+  return (
+    <ThemeProvider>
+      <MainApp />
+    </ThemeProvider>
   )
 }
