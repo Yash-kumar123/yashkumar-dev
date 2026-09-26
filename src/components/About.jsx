@@ -40,7 +40,7 @@ export default function About() {
           <div className="lg:col-span-5 space-y-6">
             <div className="relative group max-w-sm mx-auto lg:mx-0">
               {/* Asymmetric Rounded Editorial Frame */}
-              <div className="p-3 rounded-4xl glass-panel relative overflow-hidden transition-all duration-500 shadow-soft-lg group-hover:shadow-soft-xl">
+              <div className="p-3 rounded-4xl glass-panel-interactive card-revolve card-float relative overflow-hidden transition-all duration-500 shadow-soft-lg group-hover:shadow-soft-xl">
                 <div className="relative rounded-3xl overflow-hidden aspect-[4/5] max-h-[460px] bg-light-secondary dark:bg-darktheme-secondary">
                   <img
                     src={profile.photo}
@@ -71,12 +71,12 @@ export default function About() {
 
             {/* Oversized Verified Personal Metrics */}
             <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto lg:mx-0 font-mono">
-              <div className="p-5 rounded-3xl glass-panel">
+              <div className="p-5 rounded-3xl glass-panel-interactive card-revolve card-float-alt">
                 <div className="text-light-muted dark:text-darktheme-muted text-[10px] uppercase tracking-wider mb-1">DEGREE PROGRAM</div>
                 <div className="text-light-text dark:text-darktheme-text font-bold text-sm">{education.degree}</div>
                 <div className="text-light-muted dark:text-darktheme-muted text-[10px] mt-0.5">{education.years}</div>
               </div>
-              <div className="p-5 rounded-3xl glass-panel">
+              <div className="p-5 rounded-3xl glass-panel-interactive card-revolve card-float">
                 <div className="text-light-muted dark:text-darktheme-muted text-[10px] uppercase tracking-wider mb-1">NATIONAL RECOGNITION</div>
                 <div className="text-light-sky dark:text-darktheme-sky font-bold text-sm">SIH 2025 Finalist</div>
                 <div className="text-light-muted dark:text-darktheme-muted text-[10px] mt-0.5">Top Tier Engineering</div>

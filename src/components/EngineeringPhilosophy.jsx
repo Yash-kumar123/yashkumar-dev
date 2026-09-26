@@ -67,8 +67,7 @@ export default function EngineeringPhilosophy() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="group p-8 sm:p-10 rounded-4xl glass-panel-interactive flex flex-col justify-between space-y-8"
+                className="group p-8 sm:p-10 rounded-4xl glass-panel-interactive card-revolve hover:card-float flex flex-col justify-between space-y-8"
               >
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">

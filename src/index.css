@@ -137,7 +137,9 @@ body {
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.85);
   box-shadow: 0 10px 35px -10px rgba(16, 19, 24, 0.06);
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.75s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-style: preserve-3d;
+  perspective: 1200px;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.75s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.75s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .dark .glass-panel-interactive {
@@ -147,14 +149,47 @@ body {
 }
 
 .glass-panel-interactive:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 20px 50px -12px rgba(16, 19, 24, 0.12), 0 0 30px rgba(34, 199, 194, 0.15);
+  transform: translateY(-8px) rotateX(1.8deg) rotateY(-1.2deg);
+  box-shadow: 0 25px 60px -12px rgba(16, 19, 24, 0.14), 0 0 35px rgba(34, 199, 194, 0.22);
+  border-color: rgba(34, 199, 194, 0.4);
 }
 
 .dark .glass-panel-interactive:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.6), 0 0 30px rgba(77, 225, 211, 0.12);
-  border-color: rgba(77, 225, 211, 0.25);
+  transform: translateY(-8px) rotateX(1.8deg) rotateY(-1.2deg);
+  box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.7), 0 0 40px rgba(77, 225, 211, 0.25);
+  border-color: rgba(77, 225, 211, 0.45);
+}
+
+/* Floating / Revolving Card Animations */
+@keyframes float-levitate {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(0.4deg);
+  }
+}
+
+@keyframes float-levitate-alt {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-7px) rotate(-0.4deg);
+  }
+}
+
+.card-float {
+  animation: float-levitate 6s ease-in-out infinite;
+}
+
+.card-float-alt {
+  animation: float-levitate-alt 7.5s ease-in-out infinite;
+}
+
+.card-revolve:hover {
+  transform: translateY(-10px) rotateX(2.5deg) rotateY(-1.8deg) scale(1.01);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Gradient text helpers */

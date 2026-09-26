@@ -29,8 +29,9 @@ function ProjectEditorialCard({ project, index, onOpenArchitecture }) {
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-60px' }}
-      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-      className="p-8 sm:p-12 lg:p-14 rounded-4xl glass-panel hover:shadow-soft-xl transition-all duration-500 relative group overflow-hidden"
+      className={`p-8 sm:p-12 lg:p-14 rounded-4xl glass-panel-interactive card-revolve ${
+        index % 2 === 0 ? 'card-float' : 'card-float-alt'
+      } hover:shadow-soft-xl transition-all duration-500 relative group overflow-hidden`}
     >
       <div className={`grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center relative z-10`}>
         {/* Visual Mockup Container (5 Columns) */}

@@ -422,166 +422,176 @@ function CyberDinosaur({ isHovered, isDark }) {
   const plateGlowColor = isDark ? '#4DE1D3' : '#22C7C2'
 
   return (
-    // Standing across the river on the right bank, looking towards the robot & water
-    <group ref={dinoRef} position={[0.92, 0.14, 0.38]} rotation={[0, -0.95, 0]}>
-      {/* Dinosaur Main Body Torso */}
-      <group position={[0, 0.38, 0]} rotation={[0.2, 0, 0]}>
+    // Standing prominently on the rocky riverbank plateau as the majestic hero creature
+    <group ref={dinoRef} position={[0.75, 0.16, 0.25]} rotation={[0, -0.92, 0]} scale={[1.35, 1.35, 1.35]}>
+      {/* Dinosaur Main Body Torso (Powerful biomechanical raptor frame) */}
+      <group position={[0, 0.42, 0]} rotation={[0.22, 0, 0]}>
         <mesh castShadow>
-          <capsuleGeometry args={[0.22, 0.45, 8, 16]} />
+          <capsuleGeometry args={[0.25, 0.52, 10, 20]} />
           <meshStandardMaterial
             color={skinColor}
-            metalness={isDark ? 0.4 : 0.15}
-            roughness={0.5}
+            metalness={isDark ? 0.5 : 0.2}
+            roughness={0.45}
           />
         </mesh>
 
-        {/* Soft underbelly plate */}
-        <mesh position={[0, -0.06, 0.08]} rotation={[0.1, 0, 0]}>
-          <capsuleGeometry args={[0.18, 0.38, 6, 12]} />
+        {/* Soft sculpted underbelly armor plate */}
+        <mesh position={[0, -0.07, 0.09]} rotation={[0.12, 0, 0]}>
+          <capsuleGeometry args={[0.2, 0.44, 8, 16]} />
           <meshStandardMaterial
             color={underbellyColor}
-            metalness={0.1}
-            roughness={0.6}
+            metalness={0.15}
+            roughness={0.55}
           />
         </mesh>
 
-        {/* Luminescent Dorsal Spine Plates */}
-        {[-0.22, -0.1, 0.02, 0.14, 0.26].map((zPos, idx) => (
+        {/* Luminescent Dorsal Spine Plates (Running along back) */}
+        {[-0.26, -0.14, -0.02, 0.1, 0.22, 0.34].map((zPos, idx) => (
           <mesh
             key={idx}
-            position={[0, 0.22 + (idx === 2 ? 0.04 : 0), zPos]}
-            rotation={[-0.3, 0, 0]}
-            scale={[0.8, 1.0 + idx * 0.1, 0.8]}
+            position={[0, 0.25 + (idx === 2 || idx === 3 ? 0.05 : 0), zPos]}
+            rotation={[-0.32, 0, 0]}
+            scale={[0.85, 1.0 + (idx > 1 && idx < 4 ? 0.35 : 0), 0.85]}
           >
-            <coneGeometry args={[0.06, 0.16, 4]} />
+            <coneGeometry args={[0.065, 0.18, 4]} />
             <meshStandardMaterial
               color={plateGlowColor}
               emissive={plateGlowColor}
-              emissiveIntensity={isDark ? 1.2 : 0.6}
-              roughness={0.2}
+              emissiveIntensity={isDark ? 1.4 : 0.8}
+              roughness={0.15}
             />
           </mesh>
         ))}
       </group>
 
-      {/* Dinosaur Neck & Head */}
-      <group position={[0, 0.58, 0.2]}>
-        {/* Neck */}
-        <mesh position={[0, 0.14, 0.1]} rotation={[0.4, 0, 0]}>
-          <cylinderGeometry args={[0.11, 0.15, 0.32, 12]} />
-          <meshStandardMaterial color={skinColor} roughness={0.5} />
+      {/* Dinosaur Muscular Neck & Head */}
+      <group position={[0, 0.65, 0.24]}>
+        {/* Curving Neck */}
+        <mesh position={[0, 0.16, 0.12]} rotation={[0.42, 0, 0]}>
+          <cylinderGeometry args={[0.13, 0.18, 0.38, 16]} />
+          <meshStandardMaterial color={skinColor} roughness={0.45} />
         </mesh>
 
         {/* Swivel Head */}
-        <group ref={headRef} position={[0, 0.32, 0.2]}>
+        <group ref={headRef} position={[0, 0.36, 0.24]}>
           {/* Cranium Skull Dome */}
           <mesh castShadow>
-            <sphereGeometry args={[0.16, 16, 16]} />
-            <meshStandardMaterial color={skinColor} roughness={0.45} />
-          </mesh>
-
-          {/* Dinosaur Snout / Upper Beak */}
-          <mesh position={[0, -0.02, 0.18]}>
-            <boxGeometry args={[0.16, 0.13, 0.24]} />
+            <sphereGeometry args={[0.19, 20, 20]} />
             <meshStandardMaterial color={skinColor} roughness={0.4} />
           </mesh>
 
-          {/* Lower Jaw (articulated breathing) */}
-          <mesh ref={jawRef} position={[0, -0.09, 0.16]}>
-            <boxGeometry args={[0.14, 0.05, 0.22]} />
-            <meshStandardMaterial color={underbellyColor} roughness={0.5} />
+          {/* Dinosaur Snout / Predatory Beak */}
+          <mesh position={[0, -0.03, 0.22]}>
+            <boxGeometry args={[0.19, 0.15, 0.28]} />
+            <meshStandardMaterial color={skinColor} roughness={0.35} />
+          </mesh>
+
+          {/* Lower Jaw (articulated breathing & nodding) */}
+          <mesh ref={jawRef} position={[0, -0.11, 0.2]}>
+            <boxGeometry args={[0.17, 0.06, 0.26]} />
+            <meshStandardMaterial color={underbellyColor} roughness={0.45} />
           </mesh>
 
           {/* Glowing Optical Eyes (Left & Right) */}
-          <mesh position={[-0.13, 0.05, 0.08]}>
-            <sphereGeometry args={[0.038, 12, 12]} />
+          <mesh position={[-0.15, 0.06, 0.1]}>
+            <sphereGeometry args={[0.045, 14, 14]} />
             <meshBasicMaterial color={plateGlowColor} />
           </mesh>
-          <mesh position={[0.13, 0.05, 0.08]}>
-            <sphereGeometry args={[0.038, 12, 12]} />
+          <mesh position={[0.15, 0.06, 0.1]}>
+            <sphereGeometry args={[0.045, 14, 14]} />
             <meshBasicMaterial color={plateGlowColor} />
           </mesh>
           <pointLight
             ref={eyeLightRef}
-            position={[0, 0.06, 0.15]}
-            distance={1.4}
+            position={[0, 0.08, 0.18]}
+            distance={1.6}
             color={plateGlowColor}
-            intensity={0.8}
+            intensity={1.0}
           />
 
-          {/* Cute Mini Crest Horn */}
-          <mesh position={[0, 0.15, -0.02]} rotation={[-0.4, 0, 0]}>
-            <coneGeometry args={[0.045, 0.14, 4]} />
+          {/* Majestic Raptor Crest Fin */}
+          <mesh position={[0, 0.18, -0.04]} rotation={[-0.45, 0, 0]}>
+            <coneGeometry args={[0.055, 0.18, 4]} />
             <meshStandardMaterial
               color={plateGlowColor}
               emissive={plateGlowColor}
-              emissiveIntensity={isDark ? 1.0 : 0.5}
+              emissiveIntensity={isDark ? 1.2 : 0.7}
             />
           </mesh>
         </group>
       </group>
 
       {/* Articulated Swaying Dinosaur Tail */}
-      <group ref={tailRef} position={[0, 0.35, -0.28]} rotation={[-0.3, 0, 0]}>
-        {/* Tail Base */}
-        <mesh position={[0, 0, -0.2]}>
-          <cylinderGeometry args={[0.09, 0.14, 0.38, 10]} rotation={[Math.PI / 2, 0, 0]} />
-          <meshStandardMaterial color={skinColor} roughness={0.5} />
+      <group ref={tailRef} position={[0, 0.4, -0.32]} rotation={[-0.28, 0, 0]}>
+        {/* Tail Base Segment */}
+        <mesh position={[0, 0, -0.22]}>
+          <cylinderGeometry args={[0.11, 0.16, 0.44, 12]} rotation={[Math.PI / 2, 0, 0]} />
+          <meshStandardMaterial color={skinColor} roughness={0.45} />
         </mesh>
 
         {/* Tail Mid to Tip */}
-        <group ref={tailTipRef} position={[0, 0, -0.38]}>
-          <mesh position={[0, 0.04, -0.22]}>
-            <coneGeometry args={[0.08, 0.42, 8]} rotation={[-Math.PI / 2, 0, 0]} />
-            <meshStandardMaterial color={skinColor} roughness={0.5} />
+        <group ref={tailTipRef} position={[0, 0, -0.44]}>
+          <mesh position={[0, 0.04, -0.25]}>
+            <coneGeometry args={[0.09, 0.48, 10]} rotation={[-Math.PI / 2, 0, 0]} />
+            <meshStandardMaterial color={skinColor} roughness={0.45} />
           </mesh>
-          {/* Luminous Tail Tip Fin */}
-          <mesh position={[0, 0.1, -0.32]} rotation={[0.4, 0, 0]}>
-            <coneGeometry args={[0.035, 0.15, 4]} />
+          {/* Luminescent Tail Tip Blade */}
+          <mesh position={[0, 0.12, -0.38]} rotation={[0.42, 0, 0]}>
+            <coneGeometry args={[0.045, 0.18, 4]} />
             <meshStandardMaterial
               color={plateGlowColor}
               emissive={plateGlowColor}
-              emissiveIntensity={isDark ? 1.4 : 0.8}
+              emissiveIntensity={isDark ? 1.6 : 0.9}
             />
           </mesh>
         </group>
       </group>
 
-      {/* Strong Hind Legs & Feet */}
+      {/* Strong Muscular Hind Legs & Claws */}
       {/* Left Leg */}
-      <group position={[-0.2, 0.22, -0.05]}>
-        <mesh position={[0, -0.08, 0]}>
-          <cylinderGeometry args={[0.08, 0.05, 0.28, 8]} />
-          <meshStandardMaterial color={skinColor} roughness={0.5} />
+      <group position={[-0.24, 0.24, -0.06]}>
+        <mesh position={[0, -0.1, 0]}>
+          <cylinderGeometry args={[0.095, 0.06, 0.32, 10]} />
+          <meshStandardMaterial color={skinColor} roughness={0.45} />
         </mesh>
-        <mesh position={[0, -0.24, 0.04]}>
-          <boxGeometry args={[0.11, 0.04, 0.16]} />
-          <meshStandardMaterial color={underbellyColor} roughness={0.6} />
+        <mesh position={[0, -0.27, 0.05]}>
+          <boxGeometry args={[0.13, 0.05, 0.19]} />
+          <meshStandardMaterial color={underbellyColor} roughness={0.55} />
         </mesh>
       </group>
       {/* Right Leg */}
-      <group position={[0.2, 0.22, -0.05]}>
-        <mesh position={[0, -0.08, 0]}>
-          <cylinderGeometry args={[0.08, 0.05, 0.28, 8]} />
-          <meshStandardMaterial color={skinColor} roughness={0.5} />
+      <group position={[0.24, 0.24, -0.06]}>
+        <mesh position={[0, -0.1, 0]}>
+          <cylinderGeometry args={[0.095, 0.06, 0.32, 10]} />
+          <meshStandardMaterial color={skinColor} roughness={0.45} />
         </mesh>
-        <mesh position={[0, -0.24, 0.04]}>
-          <boxGeometry args={[0.11, 0.04, 0.16]} />
-          <meshStandardMaterial color={underbellyColor} roughness={0.6} />
+        <mesh position={[0, -0.27, 0.05]}>
+          <boxGeometry args={[0.13, 0.05, 0.19]} />
+          <meshStandardMaterial color={underbellyColor} roughness={0.55} />
         </mesh>
       </group>
 
-      {/* Cute Forearms poised curiously */}
-      <group position={[-0.14, 0.36, 0.22]} rotation={[0.8, -0.2, 0]}>
+      {/* Articulated Cyber Forearms poised forward */}
+      <group position={[-0.17, 0.4, 0.25]} rotation={[0.75, -0.25, 0]}>
         <mesh>
-          <cylinderGeometry args={[0.03, 0.03, 0.14, 6]} />
+          <cylinderGeometry args={[0.035, 0.035, 0.16, 8]} />
           <meshStandardMaterial color={underbellyColor} />
         </mesh>
+        {/* Forearm Claw */}
+        <mesh position={[0, 0.08, 0.04]} rotation={[0.3, 0, 0]}>
+          <coneGeometry args={[0.02, 0.06, 4]} />
+          <meshStandardMaterial color={plateGlowColor} />
+        </mesh>
       </group>
-      <group position={[0.14, 0.36, 0.22]} rotation={[0.8, 0.2, 0]}>
+      <group position={[0.17, 0.4, 0.25]} rotation={[0.75, 0.25, 0]}>
         <mesh>
-          <cylinderGeometry args={[0.03, 0.03, 0.14, 6]} />
+          <cylinderGeometry args={[0.035, 0.035, 0.16, 8]} />
           <meshStandardMaterial color={underbellyColor} />
+        </mesh>
+        {/* Forearm Claw */}
+        <mesh position={[0, 0.08, 0.04]} rotation={[0.3, 0, 0]}>
+          <coneGeometry args={[0.02, 0.06, 4]} />
+          <meshStandardMaterial color={plateGlowColor} />
         </mesh>
       </group>
     </group>

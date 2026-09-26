@@ -30,7 +30,7 @@ export default function Achievements() {
         {certificates.map((cert) => (
           <div
             key={cert.id}
-            className="mb-14 p-8 sm:p-10 rounded-4xl glass-panel relative overflow-hidden shadow-soft-md"
+            className="mb-14 p-8 sm:p-10 rounded-4xl glass-panel-interactive card-revolve card-float relative overflow-hidden shadow-soft-md"
           >
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative z-10">
               <div className="space-y-2">
